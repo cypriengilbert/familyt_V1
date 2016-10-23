@@ -15,7 +15,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            
+
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -24,44 +24,56 @@
 
                                    {{ form_errors(form) }}
 
-                                        <div class="form-group">
-                                            {{ form_label(form.email, "Email", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                        <div class="input-field">
+                                            {{ form_label(form.email, "Email", {'label_attr': {'class': ''}}) }}
                                             {{ form_errors(form.email) }}
                                             {{ form_widget(form.email, {'attr': {'class': 'form-control'}})}}
                                         </div>
 
-                                       
-                                        <div class="form-group">
-                                            {{ form_label(form.phone, "Numero de telephone", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+
+                                        <div class="input-field">
+                                            {{ form_label(form.phone, "Numero de telephone", {'label_attr': {'class': ''}}) }}
                                             {{ form_errors(form.phone) }}
                                             {{ form_widget(form.phone, {'attr': {'class': 'form-control'}})}}
                                         </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.adresse1, "N° + Rue", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                        <div class="input-field">
+                                            {{ form_label(form.adresse1, "N° + Rue", {'label_attr': {'class': ''}}) }}
                                             {{ form_errors(form.adresse1) }}
                                             {{ form_widget(form.adresse1, {'attr': {'class': 'form-control'}})}}
                                         </div>
-                                         <div class="form-group">
-                                            {{ form_label(form.adresse2, "Info complémentaires", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                         <div class="input-field">
+                                            {{ form_label(form.adresse2, "Info complémentaires", {'label_attr': {'class': ''}}) }}
                                             {{ form_errors(form.adresse2) }}
                                             {{ form_widget(form.adresse2, {'attr': {'class': 'form-control'}})}}
                                         </div>
-                                        <div class="form-group">
-                                            {{ form_label(form.adresse3, "Code Postal + Ville", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                        <div class="input-field">
+                                            {{ form_label(form.adresse3, "Code Postal + Ville", {'label_attr': {'class': ''}}) }}
                                             {{ form_errors(form.adresse3) }}
                                             {{ form_widget(form.adresse3, {'attr': {'class': 'form-control'}})}}
                                         </div>
 
 
-                                      <input type="submit" class="col-md-12 btn btn-outline btn-primary btn-lg" />
-                                        {{ form_end(form) }}
+                                        </div>
+    </div>
+    <div class="row" style="margin-top:70px">
+       <div class="col s4">
+       </div>
+       <div class="col s4">
+          <button class="btn waves-effect waves-light" type="submit" name="action">Valider
+          <i class="material-icons right">send</i>
+          </button>
+          {{ form_end(form) }}
+       </div>
+       <div class="col s4">
+       </div>
+    </div>
 
-                                    
-                                    
-                                       
-                                    
+
+
+
+
                                 </div>
-                                
+
                             </div>
                             <!-- /.row (nested) -->
                         </div>

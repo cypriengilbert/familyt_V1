@@ -17,7 +17,7 @@ class User extends BaseUser
    * @ORM\Column(name="id", type="integer")
    * @ORM\Id
    * @ORM\GeneratedValue(strategy="AUTO")
-   
+
    */
   protected $id;
 
@@ -64,15 +64,22 @@ class User extends BaseUser
     private $phonefixe;
 
     /**
+     * @var string
+     *
+     * @ORM\Column(name="image", type="string",  nullable=true)
+     */
+    private $image;
+
+    /**
    * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Famille", cascade={"persist"})
-   * @ORM\JoinTable(name="user_famille", 
+   * @ORM\JoinTable(name="user_famille",
    * joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
    * inverseJoinColumns={@ORM\JoinColumn(name="famille_id", referencedColumnName="id")})
    */
   private $famille;
 
-  
-   
+
+
 
     /**
      * Set adresse1
@@ -250,5 +257,29 @@ class User extends BaseUser
     public function getBirthday()
     {
         return $this->birthday;
+    }
+
+    /**
+     * Set image
+     *
+     * @param string $image
+     *
+     * @return User
+     */
+    public function setImage($image)
+    {
+        $this->image = $image;
+
+        return $this;
+    }
+
+    /**
+     * Get image
+     *
+     * @return string
+     */
+    public function getImage()
+    {
+        return $this->image;
     }
 }

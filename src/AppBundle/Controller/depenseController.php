@@ -39,19 +39,13 @@ class depenseController extends Controller
     $depense->setPar($famille);
     $depense->setdate($datetime);
     $form = $this->get('form.factory')->create('AppBundle\Form\DepenseType', $depense);
-
-
-   
-    
-
     $form->handleRequest($request);
-
     if ($form->isSubmitted() && $form->isValid()) {
         // ... perform some action, such as saving the task to the database
         // On récupère l'EntityManager
         $em = $this->getDoctrine()->getManager();
 
-      
+
 
 
     // Étape 1 : On « persiste » l'entité
@@ -65,10 +59,11 @@ class depenseController extends Controller
     }
 
 
-    
+
 
     return $this->render('AppBundle:Default:addDepense.html.twig', array(
         'form' =>$form->createView(),
+        'famille' => $famille,
 
         ));
     }
@@ -80,39 +75,28 @@ class depenseController extends Controller
 public function mesdepensesAction()
 {
 
-  $famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
-      $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('AppBundle:Depense');
+      $famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first()->getId();
+      $famille_ent = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
 
-        $debit = $repository->FindAllDebit($famille);
-
-
-
-
-  return $this->render('AppBundle:Default:depense.html.twig', array(
+      $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Depense');
+      $debit = $repository->FindDebit($famille);
+      return $this->render('AppBundle:Default:depense.html.twig', array(
       'debit' => $debit,
+      'famille_ent' => $famille_ent,
       'famille' => $famille
-    ));
+      ));
 }
 
 public function depensetotaleAction()
 {
 
-  
-      $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('UserBundle:Famille');
-  $famille = $repository->FindAll();
+  $test = 0;
 
-        $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('AppBundle:Depense');
+      $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:Famille');
+      $famille = $repository->FindAll();
+      $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Depense');
+      $debit = $repository->FindAll();
 
-        $debit = $repository->FindAll();
         $resultat = array();
           foreach ($famille as $listefamille) {
             $resultat[$listefamille->getNom()] = 0;
@@ -127,51 +111,46 @@ public function depensetotaleAction()
                 $resultat[$listefamille->getNom()] = $temp;
 
 
-                if($listedepense->getType() == 'moitie'){
-                $key = $listefamille->getId();
-                $temp = $resultat[$listefamille->getNom()];
-                $temp = $temp - $listedepense->getMontant()*$listefamille->getCoef2();
-                $resultat[$listefamille->getNom()] = $temp;
-                }
+
               }
-              
+
             }
           }
-
           foreach($famille as $listefamille){
             foreach($debit as $listedepense){
-              if($listedepense->getPour()->getId() == $listefamille->getId()){
-                if($listedepense->getType() =='remboursement'){
+              $pour = $listedepense->getPour();
+              foreach($pour as $listePour){
+                if($listePour == $listefamille){
+                  if($listedepense->getType() =='remboursement'){
+                  $key = $listefamille->getId();
+                  $temp = $resultat[$listefamille->getNom()];
+                  $temp = $temp - ($listedepense->getMontant()/(count($pour)));
+                  $resultat[$listefamille->getNom()] = $temp;
 
+                  }
 
-                $key = $listefamille->getId();
-                $temp = $resultat[$listefamille->getNom()];
-                $temp = $temp - $listedepense->getMontant()*$listefamille->getCoefRemb();
-                $resultat[$listefamille->getNom()] = $temp;
+                  if($listedepense->getType() =='moitie'){
+                  $key = $listefamille->getId();
+                  $temp = $resultat[$listefamille->getNom()];
+                  $temp = $temp - $listedepense->getMontant()/(count($pour));
+                  $resultat[$listefamille->getNom()] = $temp;
 
-                }
-
-                if($listedepense->getType() =='moitie'){
-                $key = $listefamille->getId();
-                $temp = $resultat[$listefamille->getNom()];
-                $temp = $temp - $listedepense->getMontant()*$listefamille->getCoef2();
-                $resultat[$listefamille->getNom()] = $temp;
-
-                }
-                
+                  }
+}
               }
 
 
-               if($listedepense->getPour()->getId() == 10){
+               if(count($listedepense->getPour()) == 7){
                 if ($listedepense->getType() == 'O&T') {
                   if($listedepense->getConcerne()->getId() != $listefamille->getId()){
                 $key = $listefamille->getId();
                 $temp = $resultat[$listefamille->getNom()];
                 $temp = $temp - $listedepense->getMontant()*$listefamille->getCoefOetT();
                 $resultat[$listefamille->getNom()] = $temp;
-
+}
               }
                 }
+                if(count($listedepense->getPour()) == 8){
                 if ($listedepense->getType() == 'F&S') {
                  $key = $listefamille->getId();
                 $temp = $resultat[$listefamille->getNom()];
@@ -179,10 +158,10 @@ public function depensetotaleAction()
                 $resultat[$listefamille->getNom()] = $temp;
                 }
 
-                
+                }
               }
             }
-          }
+
 
 
 
@@ -190,7 +169,8 @@ public function depensetotaleAction()
   return $this->render('AppBundle:Default:depenseTotale.html.twig', array(
       'debit' => $debit,
       'famille' => $famille,
-      'resultat' => $resultat
+      'resultat' => $resultat,
+      'test' => $test
     ));
 
 }
@@ -219,15 +199,15 @@ public function depensetotaleAction()
 
     $em->remove($depense);
 
-    
+
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien supprimée.');
 
       return $this->redirect($this->generateUrl('gnet_platform_mesdepenses'));
-   
 
-    
+
+
     }
 
 

@@ -9,6 +9,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 class DepenseType extends AbstractType
 {
@@ -19,25 +20,26 @@ class DepenseType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
         $builder
-            ->add('pour', 'entity', array(
-                'class' => 'UserBundle:Famille',
-                'property' => 'nom',
-                'empty_value' => 'Choisir une famille, ou "tout le monde"',
-                'multiple' => false))
+            ->add('pour', EntityType::class, array(
+                                   'class' => 'UserBundle:Famille',
+                                   'choice_label' => 'nom',
+                                  'multiple' => true,
+                                  'expanded' => true,
+                                   'required' => true))
             ->add('description')
             ->add('concerne', 'entity', array(
                 'class' => 'UserBundle:Famille',
                 'property' => 'nom',
                 'multiple' => false,
                 'required' => false))
-            ->add('type', 'choice', array('multiple' => false, 'choices' => array('F&S' => 'Cadeau des Frères et Soeur', 'O&T' => 'Cadeau des Oncles et Tantes', 'remboursement' => 'Avance', 'moitie' => 'Cadeau à deux')))
+            ->add('type', 'choice', array(  'required'=>true,  'placeholder' => '','multiple' => false, 'choices' => array('F&S' => 'Cadeau des Frères et Soeur', 'O&T' => 'Cadeau des Oncles et Tantes', 'remboursement' => 'Avance', 'moitie' => 'Parts égales')))
             ->add('montant')
-            
+
         ;
     }
 
 
-    
+
     /**
      * @param OptionsResolver $resolver
      */

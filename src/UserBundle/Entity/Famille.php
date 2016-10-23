@@ -55,7 +55,7 @@ class Famille
      */
     private $coef_2;
 
-     
+
 
     /**
      * Get id

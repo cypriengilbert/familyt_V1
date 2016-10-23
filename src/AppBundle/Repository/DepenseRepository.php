@@ -29,5 +29,19 @@ class DepenseRepository extends \Doctrine\ORM\EntityRepository
     ->getResult()
   ;
 	}
+	public function FindDebit($id)
+	{
 
+	$qb1 = $this->createQueryBuilder('a');
+	$qb1
+	->leftJoin('a.pour', 'b')
+	->where('a.par = :id')
+	->orwhere('b = :id')
+	->setParameter('id', $id)
+	;
+	return $qb1
+		->getQuery()
+		->getResult();
+
+}
 }

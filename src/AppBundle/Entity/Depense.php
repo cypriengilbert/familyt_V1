@@ -3,6 +3,7 @@
 namespace AppBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
 
 /**
  * Depense
@@ -21,10 +22,13 @@ class Depense
      */
     private $id;
 
+
     /**
-   * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Famille")
-   * @ORM\JoinColumn(nullable=false)
-   */
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Famille", cascade={"persist"})
+     * @ORM\JoinTable(name="depense_famille",
+     * joinColumns={@ORM\JoinColumn(name="depense_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="famille_id", referencedColumnName="id")})
+     */
   private $pour;
 
    /**
@@ -39,7 +43,6 @@ class Depense
    * @ORM\JoinColumn(nullable=true)
    */
   private $concerne;
-
 
    /**
      * @var string
@@ -70,7 +73,7 @@ class Depense
      */
     private $type;
 
-    
+
 
 
 
@@ -109,29 +112,7 @@ class Depense
         return $this->par;
     }
 
-    /**
-     * Set pour
-     *
-     * @param string $pour
-     *
-     * @return Depense
-     */
-    public function setPour($pour)
-    {
-        $this->pour = $pour;
 
-        return $this;
-    }
-
-    /**
-     * Get pour
-     *
-     * @return string
-     */
-    public function getPour()
-    {
-        return $this->pour;
-    }
 
     /**
      * Set description
@@ -157,7 +138,7 @@ class Depense
         return $this->description;
     }
 
-    
+
 
     /**
      * Set montant
@@ -253,5 +234,46 @@ class Depense
     public function getConcerne()
     {
         return $this->concerne;
+    }
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->pour = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    /**
+     * Add pour
+     *
+     * @param \UserBundle\Entity\Famille $pour
+     *
+     * @return Depense
+     */
+    public function addPour(\UserBundle\Entity\Famille $pour)
+    {
+        $this->pour[] = $pour;
+
+        return $this;
+    }
+
+    /**
+     * Remove pour
+     *
+     * @param \UserBundle\Entity\Famille $pour
+     */
+    public function removePour(\UserBundle\Entity\Famille $pour)
+    {
+        $this->pour->removeElement($pour);
+    }
+
+    /**
+     * Get pour
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getPour()
+    {
+        return $this->pour;
     }
 }

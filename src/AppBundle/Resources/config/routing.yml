@@ -16,6 +16,10 @@ gnet_platform_autreListe:
     defaults: { _controller: AppBundle:maliste:autreListe}
     requirements:
             id: \d*
+gnet_platform_allListe:
+    path:     /allListe
+    defaults: { _controller: AppBundle:maliste:allListe}
+
 
 gnet_platform_editComment:
     path:     /Liste_de_noel/editComment/{id}

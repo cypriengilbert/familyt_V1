@@ -28,7 +28,7 @@ class malisteController extends Controller
     public function malisteAction()
     {
         $id_user = $this->container->get('security.context')->getToken()->getUser();
-        
+
     	$repository = $this
 		  ->getDoctrine()
 		  ->getManager()
@@ -58,8 +58,8 @@ return $this->render('AppBundle:Default:maliste.html.twig', array(
           ->getRepository('UserBundle:User');
 
         $User = $repository->findOneBy(array('id' => $id));
-    
-        
+
+
         $repository = $this
           ->getDoctrine()
           ->getManager()
@@ -72,10 +72,28 @@ $listListe = $repository->FindAllOther($User);
 
 
 return $this->render('AppBundle:Default:autreListe.html.twig', array(
-      'Liste' => $listListe, 
+      'Liste' => $listListe,
       'User' => $User
     ));
     }
+
+
+    public function allListeAction()
+    {
+          $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('UserBundle:User');
+        $User = $repository->findAll();
+
+
+
+  return $this->render('AppBundle:Default:allListe.html.twig', array(
+      'users' => $User
+    ));
+    }
+
+
 
 public function changeCommentAction(Request $request, $id)
     {
@@ -119,15 +137,15 @@ public function changeCommentAction(Request $request, $id)
 
     $Objet->setPris('1');
 
-    
+
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
 
       return $this->redirect($this->generateUrl('gnet_platform_autreListe', array('id' => $Objet->getUser()->getId())));
-   
 
-    
+
+
     }
 
      public function dispoAction(Request $request, $id)
@@ -144,15 +162,15 @@ public function changeCommentAction(Request $request, $id)
 
     $Objet->setPris('0');
 
-    
+
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
 
       return $this->redirect($this->generateUrl('gnet_platform_autreListe', array('id' => $Objet->getUser()->getId())));
-   
 
-    
+
+
     }
 
 
@@ -169,8 +187,8 @@ public function changeCommentAction(Request $request, $id)
     $form = $this->get('form.factory')->create('AppBundle\Form\ObjetListeType', $objetliste);
 
 
-   
-    
+
+
 
     $form->handleRequest($request);
 
@@ -190,7 +208,7 @@ public function changeCommentAction(Request $request, $id)
     }
 
 
-    
+
 
     return $this->render('AppBundle:Default:addListe.html.twig', array(
         'form' =>$form->createView(),
@@ -212,15 +230,15 @@ public function changeCommentAction(Request $request, $id)
 
     $em->remove($Objet);
 
-    
+
       $em->flush();
 
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien supprimée.');
 
       return $this->redirect($this->generateUrl('gnet_platform_view'));
-   
 
-    
+
+
     }
 
 	public function editListeAction(Request $request, $id)
