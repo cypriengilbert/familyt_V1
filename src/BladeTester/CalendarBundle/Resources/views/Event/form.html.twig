@@ -1,0 +1,58 @@
+
+
+
+                                  {{ form_start(form, {'attr': {'class': 'form-vertical'}}) }}
+
+                                   {{ form_errors(form) }}
+
+                                        <div class="form-group">
+                                            {{ form_label(form.title, "Titre", {'label_attr': {'class': 'col-md-12 control-label'}}) }}
+                                            {{ form_errors(form.title) }}<br>
+                                            {{ form_widget(form.title, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+                                       
+                                        <div class="form-group">
+                                            {{ form_label(form.description, "Description", {'label_attr': {'class': 'col-md-12 control-label'}}) }}
+                                            {{ form_errors(form.description) }}<br>
+                                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+                                         <div class="form-group">
+                                            {{ form_label(form.start, "Date de début", {'label_attr': {'class': 'col-md-12 control-label '}}) }}
+                                            {{ form_errors(form.start) }}<br>
+                                            {{ form_widget(form.start, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+                                        
+
+                                        <div class="form-group">
+                                            {{ form_label(form.end, "Date de fin", {'label_attr': {'class': 'col-sm-12 control-label'}}) }}
+                                            {{ form_errors(form.end) }}<br>
+                                            {{ form_widget(form.end, {'attr': {'id': 'form-control'}})}}
+                                        </div>
+
+
+
+                                         <input type="submit" value="{{ 'bladetester_calendar.label.event.add'|trans }}" /> 
+                                         {% include 'BladeTesterCalendarBundle:Event:cancel.html.twig' %}
+                                       
+                                        {{ form_end(form) }}
+
+                                        
+
+                                    
+<script src="{{ asset('js/4a0cd49.js') }}"></script>
+  <script src="{{ asset('js/4a0cd49_part_1_jquery-1.11.0.min_1.js') }}"></script>
+   <script src="{{ asset('js/4a0cd49_part_1_jquery-ui.min_2.js') }}"></script>
+    <script src="{{ asset('js/4a0cd49_part_1_main_3.js') }}"></script>
+     <script src="{{ asset('js/4a0cd49_part_1_modernizr-2.6.2-respond-1.1.0.min_4.js') }}"></script>
+      <script src="{{ asset('js/4a0cd49_part_1_zbootstrap.min_6.js') }}"></script>
+       <script src="{{ asset('js/4a0cd49_part_1_zbootstrap-timepicker.min_5.js') }}"></script>
+      
+
+
+
+
+      <script type="text/javascript">
+        $('.datepicker').datepicker({ dateFormat: 'dd-mm-yy' });
+        $('.timepicker').timepicker({ showMeridian: false, minuteStep: 5, defaultTime: false});
+    </script>
+

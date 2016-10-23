@@ -1,0 +1,26 @@
+
+app:
+    resource: "@AppBundle/Controller/"
+    type:     annotation
+    prefix:   /
+
+accueil: 
+    resource: "@AppBundle/Controller/"
+    type: annotation
+    
+app_bundle:
+    resource: "@AppBundle/Resources/config/routing.yml"
+    
+user_bundle:
+   resource: "@UserBundle/Resources/config/routing.yml"
+
+fos_js_routing:
+    resource: "@FOSJsRoutingBundle/Resources/config/routing/routing.xml"
+
+BladeTesterCalendarBundle:
+    resource: "@BladeTesterCalendarBundle/Resources/config/routing.yml"
+    prefix:   /
+    
+kyela:
+    resource: "@KyelaBundle/Resources/config/routing.yml"
+    prefix: /kyela

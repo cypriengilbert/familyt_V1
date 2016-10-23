@@ -1,0 +1,8 @@
+services:
+	form.type.typeDeDepense:
+        class: AppBundle\Form\Type\typeDeDepenseType
+        tags:
+            - { name: form.type, alias: typeDeDepense }
+#    gnet_platform.example:
+#        class: Gnet\PlatformBundle\Example
+#        arguments: [@service_id, "plain_value", %parameter%]

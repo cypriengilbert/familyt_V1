@@ -1,0 +1,18 @@
+  {% for liste in famille %}
+  {% if liste.nom != 'Tout le monde' %}
+                                <li>
+                                    <a href="#">Famille {{ liste.nom }}<span class="fa arrow"></span></a>
+                                    <ul class="nav nav-third-level">
+                                        {% for test in jointure %}
+                                        {% if (test.nom == liste.nom) %}
+                                       
+                                           
+                                        <li>
+                                             <a href="{{ path('gnet_platform_autreListe', {'id': test.id }) }}">{{ test.username }} </a>
+                                        </li>
+                                           {% endif %}
+                                        {% endfor %}
+                                    </ul>
+                                </li>
+                                {% endif %}
+                                {% endfor %}

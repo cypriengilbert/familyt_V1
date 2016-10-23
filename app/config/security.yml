@@ -1,0 +1,41 @@
+# To get started with security, check out the documentation:
+# http://symfony.com/doc/current/book/security.html
+security:
+    encoders:
+        UserBundle\Entity\User: sha512
+
+    role_hierarchy:
+        ROLE_ADMIN:       ROLE_USER
+        ROLE_SUPER_ADMIN: [ROLE_USER, ROLE_ADMIN, ROLE_ALLOWED_TO_SWITCH]
+
+    # http://symfony.com/doc/current/book/security.html#where-do-users-come-from-user-providers
+    providers:
+        fos_userbundle:
+            id: fos_user.user_provider.username
+
+    firewalls:
+        dev:
+                pattern:  ^/(_(profiler|wdt)|css|images|js)/
+                security: false
+        main:
+            pattern: ^/
+            anonymous: true
+            provider:    main
+            form_login:
+               check_path: fos_user_security_check
+               login_path: fos_user_security_login
+               provider: fos_userbundle
+            logout:
+               path:    fos_user_security_logout
+               target: /
+            remember_me:
+                key: %secret%
+
+    access_control:
+       - { path: ^/login$, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/register, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/resetting, role: IS_AUTHENTICATED_ANONYMOUSLY }
+       - { path: ^/admin/, role: ROLE_ADMIN }
+       - { path: ^/Liste_de_noel/maliste, role: ROLE_USER }
+       - { path: ^/, role: ROLE_USER }
+       - { path: ^/_console, ip: 176.149.206.147 }

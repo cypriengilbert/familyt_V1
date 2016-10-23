@@ -1,0 +1,82 @@
+
+{% extends "AppBundle:Default:layout.html.twig" %}
+
+{% block body %}
+{% if (app.user.birthday|date('U') > '2000-01-01'|date('U')) %}
+
+<div id="page-wrapper"> <h1><br><br><br>Tu es bien trop jeune pour accéder à cette page ;)<h1></div>
+
+
+{% else %}
+<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Ajouter une dépense</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            
+                        </div>
+                        <div class="panel-body">
+                            <div class="row">
+                                <div class="col-lg-6">
+                                  {{ form_start(form, {'attr': {'class': 'form-vertical'}}) }}
+
+                                   {{ form_errors(form) }}
+
+                                        <div class="form-group">
+                                            {{ form_label(form.pour, "A qui imputé cette dépense ? Merci de mettre 'Tout le monde' s'il s'agit d'un cadeau commun", {'label_attr': {'class': 'col-md-12 control-label'}}) }}
+                                            {{ form_errors(form.pour) }}<br>
+                                            {{ form_widget(form.pour, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+                                       
+                                        <div class="form-group">
+                                            {{ form_label(form.description, "Quel est l'objet de la dépense ?", {'label_attr': {'class': 'col-md-12 control-label'}}) }}
+                                            {{ form_errors(form.description) }}<br>
+                                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+                                         <div class="form-group">
+                                            {{ form_label(form.concerne, "Pour qui est le cadeau ? (laisser vide si ce n'est pas un cadeau)", {'label_attr': {'class': 'col-md-12 control-label'}}) }}
+                                            {{ form_errors(form.concerne) }}<br>
+                                            {{ form_widget(form.concerne, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.montant, "Le montant ?", {'label_attr': {'class': 'col-md-12 control-label'}}) }}
+                                            {{ form_errors(form.montant) }}<br>
+                                            {{ form_widget(form.montant, {'attr': {'class': 'form-control input-group'}})}}
+                                        </div>
+                                        <div class="form-group">
+                                            {{ form_label(form.type, "Quel type ? (Important pour les comptes!!!)", {'label_attr': {'class': 'col-sm-12 control-label'}}) }}
+                                            {{ form_errors(form.type) }}<br>
+                                            {{ form_widget(form.type, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+
+                                        
+
+                                        <input type="submit" class="col-md-12 btn btn-outline btn-primary btn-lg" />
+                                        {{ form_end(form) }}
+
+                                    
+                                    
+                                       
+                                    
+                                </div>
+                                
+                            </div>
+                            <!-- /.row (nested) -->
+                        </div>
+                        <!-- /.panel-body -->
+                    </div>
+                    <!-- /.panel -->
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+        </div>
+        {% endif %}
+        {% endblock %}

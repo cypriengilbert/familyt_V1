@@ -1,0 +1,69 @@
+
+
+{% extends "AppBundle:Default:layout.html.twig" %}
+
+{% block body %}
+<div id="page-wrapper">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header">Mon compte</h1>
+                </div>
+                <!-- /.col-lg-12 -->
+            </div>
+            <!-- /.row -->
+            
+            
+            <div class="row">
+                <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Nom
+                            </div>
+                            <div class="panel-body">
+                                <p><h3>{{ app.user.username }}</h3></p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Mail
+                            </div>
+                            <div class="panel-body">
+                                <p><h3>{{ app.user.email }}</h3></p>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Adresse
+                            </div>
+                            <div class="panel-body">
+                                <p><h3>{{ app.user.adresse1 }}<br>
+                                {{ app.user.adresse2 }}</br>
+                                {{ app.user.adresse3 }}</h3></p>
+                            </div>
+                        </div>
+                    </div>
+                     <div class="col-lg-12">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                Numéro de Téléphone
+                            </div>
+                            <div class="panel-body">
+                                <p><h3>{{ app.user.phone }}
+                            </div>
+                        </div>
+                    </div>
+                        <!-- /.panel-body -->
+                </div>
+                <a href="{{ path('gnet_platform_editCompte') }}"><button type="button" class="btn btn-outline btn-primary btn-lg btn-block">Modifier</button></a>
+                    <!-- /.panel -->
+            </div>
+                <!-- /.col-lg-12 -->
+                
+            
+        </div>
+        {% endblock %}

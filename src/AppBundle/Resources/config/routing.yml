@@ -1,0 +1,88 @@
+gnet_platform_homepage:
+    path:     /home
+    defaults: { _controller: AppBundle:Accueil:index }
+
+gnet_platform_view:
+    path:     /Liste_de_noel/maliste
+    defaults: { _controller: AppBundle:maliste:maliste }
+
+
+gnet_platform_addListe:
+    path:     /Liste_de_noel/maliste/addListe
+    defaults: { _controller: AppBundle:maliste:addListe}
+
+gnet_platform_autreListe:
+    path:     /Liste_de_noel/{id}
+    defaults: { _controller: AppBundle:maliste:autreListe}
+    requirements:
+            id: \d*
+
+gnet_platform_editComment:
+    path:     /Liste_de_noel/editComment/{id}
+    defaults: { _controller: AppBundle:maliste:changeComment}
+    requirements:
+         id: \d*
+
+gnet_platform_deleteListe:
+    path:     /Liste_de_noel/maliste/deleteListe
+    defaults: { _controller: GnetPlatformBundle:maliste:deleteListe}
+
+gnet_platform_rendreIndispo:
+    path:     /Liste_de_noel/indispo/{id}
+    defaults: { _controller: AppBundle:maliste:indispo}
+    requirements:
+         id: \d*
+
+
+gnet_platform_rendredispo:
+    path:     /Liste_de_noel/dispo/{id}
+    defaults: { _controller: AppBundle:maliste:dispo}
+    requirements:
+         id: \d*
+
+gnet_platform_DeleteListe:
+    path:     /Liste_de_noel/delete/{id}
+    defaults: { _controller: AppBundle:maliste:deleteListe}
+    requirements:
+         id: \d*
+
+gnet_platform_editListe:
+    path:     /Liste_de_noel/edit/{id}
+    defaults: { _controller: AppBundle:maliste:editListe}
+    requirements:
+         id: \d*
+
+gnet_platform_moncompte:
+    path:     /compte/moncompte
+    defaults: { _controller: AppBundle:compte:voirCompte}
+
+gnet_platform_autrecompte:
+    path:     /compte/liste
+    defaults: { _controller: AppBundle:compte:voirAutreCompte}
+
+gnet_platform_editCompte:
+    path:     /editcompte/
+    defaults: { _controller: AppBundle:compte:editCompte}
+
+gnet_platform_addDepense:
+    path:     /depense/add
+    defaults: { _controller: AppBundle:depense:addDepense}
+
+gnet_platform_mesdepenses:
+    path:     /depense/mesdepenses
+    defaults: { _controller: AppBundle:depense:mesdepenses}
+
+gnet_platform_editdepenses:
+    path:     /depense/mesdepenses/edit/{id}
+    defaults: { _controller: AppBundle:depense:editDepense}
+    requirements:
+        id: \d*
+
+gnet_platform_deletedepenses:
+    path:     /depense/mesdepenses/delete/{id}
+    defaults: { _controller: AppBundle:depense:deleteDepense}
+    requirements:
+        id: \d*
+gnet_platform_depensetotale:
+    path:     /depense/resume
+    defaults: { _controller: AppBundle:depense:depensetotale}
