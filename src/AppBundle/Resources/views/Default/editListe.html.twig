@@ -15,7 +15,7 @@
                 <div class="col-lg-12">
                     <div class="panel panel-default">
                         <div class="panel-heading">
-                            
+
                         </div>
                         <div class="panel-body">
                             <div class="row">
@@ -24,28 +24,53 @@
 
                                    {{ form_errors(form) }}
 
-                                        <div class="form-group">
-                                            {{ form_label(form.description, "Une erreur dans la description ?", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                      <div class="row">
+                                        <div class="input-field col s12">
+                                            {{ form_label(form.description, "Une erreur dans la description ?", {'label_attr': {'class': 'col-sm-12 control-label'}}) }}
                                             {{ form_errors(form.description) }}
                                             {{ form_widget(form.description, {'attr': {'class': 'form-control'}})}}
                                         </div>
+                                        </div>
 
-                                       
-                                        <div class="form-group">
+
+                                        <div class="row">
+                                        <div class="input-field col s6">
                                             {{ form_label(form.commentaire, "ou une erreur dans le commentaire ?", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
                                             {{ form_errors(form.commentaire) }}
                                             {{ form_widget(form.commentaire, {'attr': {'class': 'form-control'}})}}
                                         </div>
+                                        <div class="input-field  col s6">
+                                            {{ form_label(form.url, "Un lien web ?", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                            {{ form_errors(form.url) }}
+                                            {{ form_widget(form.url, {'attr': {'class': 'form-control'}})}}
+                                        </div>
+                                        </div>
+                                        <div class="row">
+
+                                        <div class="input-field  col s6">
+                                        {{ form_widget(form.commun, {'attr': {'class': 'css_checkbox', 'onchange' : 'commun()'}})}}
+
+                                            {{ form_label(form.commun, "", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                            {{ form_errors(form.commun) }}
+                                        </div>
+                                        <div class="input-field  col s6">
+                                        {{ form_widget(form.communfamille, {'attr': {'class': 'css_checkbox', 'onchange' : 'communfamille()'}})}}
+
+                                            {{ form_label(form.communfamille, "",{'label_attr': {'class': 'col-sm-6'}}) }}
+                                            {{ form_errors(form.communfamille) }}
+                                        </div>
+                                        </div>
+
 
                                         <input type="submit" class="col-md-12 btn btn-outline btn-primary btn-lg" />
                                         {{ form_end(form) }}
 
-                                    
-                                    
-                                       
-                                    
+
+
+
+
                                 </div>
-                                
+
                             </div>
                             <!-- /.row (nested) -->
                         </div>
@@ -57,4 +82,24 @@
             </div>
             <!-- /.row -->
         </div>
+<script>
+function communfamille(){
+
+if (document.getElementById('ObjetListe_communfamille').checked == true){
+document.getElementById('ObjetListe_commun').disabled = true;
+}
+else{
+document.getElementById('ObjetListe_commun').disabled = false;
+}}
+function commun(){
+
+if (document.getElementById('ObjetListe_commun').checked == true){
+document.getElementById('ObjetListe_communfamille').disabled = true;
+}
+else {
+document.getElementById('ObjetListe_communfamille').disabled = false;
+
+}
+}
+</script>
         {% endblock %}

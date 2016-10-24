@@ -8,6 +8,7 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 
 class ObjetListeModifyContentType extends AbstractType
 {
@@ -20,14 +21,22 @@ class ObjetListeModifyContentType extends AbstractType
         $builder
             ->add('description')
             ->add('commentaire')
-           
-            
-            
+            ->add('url')
+            ->add('commun',CheckboxType::class, array(
+    'label'    => 'Cochez pour un cadeau commun au couple',
+    'required' => false,
+))
+            ->add('communfamille', CheckboxType::class, array(
+    'label'    => 'Cochez pour un cadeau commun à la famille',
+    'required' => false,
+))
+
+
 
 
         ;
     }
-    
+
     /**
      * @param OptionsResolver $resolver
      */

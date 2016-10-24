@@ -49,8 +49,36 @@ class ObjetListe
      */
     private $pris;
 
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="commun", type="boolean")
+    */
+    private $commun;
 
-  
+    /**
+    * @var boolean
+    *
+    * @ORM\Column(name="communfamille", type="boolean")
+    */
+    private $communfamille;
+
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="url", type="string", length=500, nullable=true)
+     */
+    private $url;
+
+    /**
+    * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Famille")
+    * @ORM\JoinColumn(nullable=false)
+    */
+   private $famille;
+
+
+
+
 
   /**
    * @ORM\ManyToOne(targetEntity="UserBundle\Entity\User")
@@ -187,5 +215,101 @@ class ObjetListe
     public function getPris()
     {
         return $this->pris;
+    }
+
+    /**
+     * Set commun
+     *
+     * @param boolean $commun
+     *
+     * @return ObjetListe
+     */
+    public function setCommun($commun)
+    {
+        $this->commun = $commun;
+
+        return $this;
+    }
+
+    /**
+     * Get commun
+     *
+     * @return boolean
+     */
+    public function getCommun()
+    {
+        return $this->commun;
+    }
+
+    /**
+     * Set communfamille
+     *
+     * @param boolean $communfamille
+     *
+     * @return ObjetListe
+     */
+    public function setCommunfamille($communfamille)
+    {
+        $this->communfamille = $communfamille;
+
+        return $this;
+    }
+
+    /**
+     * Get communfamille
+     *
+     * @return boolean
+     */
+    public function getCommunfamille()
+    {
+        return $this->communfamille;
+    }
+
+    /**
+     * Set url
+     *
+     * @param string $url
+     *
+     * @return ObjetListe
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
+
+        return $this;
+    }
+
+    /**
+     * Get url
+     *
+     * @return string
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * Set famille
+     *
+     * @param \UserBundle\Entity\Famille $famille
+     *
+     * @return ObjetListe
+     */
+    public function setFamille(\UserBundle\Entity\Famille $famille)
+    {
+        $this->famille = $famille;
+
+        return $this;
+    }
+
+    /**
+     * Get famille
+     *
+     * @return \UserBundle\Entity\Famille
+     */
+    public function getFamille()
+    {
+        return $this->famille;
     }
 }

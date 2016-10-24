@@ -22,20 +22,44 @@
                                 <div class="col-lg-12">
                                   {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
-                                   {{ form_errors(form) }}
+                                  {{ form_errors(form) }}
+
+                                     <div class="row">
+                                       <div class="input-field col s12">
+                                           {{ form_label(form.description, "Description", {'label_attr': {'class': 'col-sm-12 control-label'}}) }}
+                                           {{ form_errors(form.description) }}
+                                           {{ form_widget(form.description, {'attr': {'class': 'form-control'}})}}
+                                       </div>
+                                       </div>
 
 
+                                       <div class="row">
+                                       <div class="input-field col s6">
+                                           {{ form_label(form.commentaire, "Commentaire", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                           {{ form_errors(form.commentaire) }}
+                                           {{ form_widget(form.commentaire, {'attr': {'class': 'form-control'}})}}
+                                       </div>
+                                       <div class="input-field  col s6">
+                                           {{ form_label(form.url, "Un lien web ? (merci de mettre l'url complète : 'http://www.com')", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                           {{ form_errors(form.url) }}
+                                           {{ form_widget(form.url, {'attr': {'class': 'form-control'}})}}
+                                       </div>
+                                       </div>
+                                       <div class="row">
 
-                                        <div class="input-field">
-                                            {{ form_label(form.description, "Quel est votre souhait ?", {'label_attr': {'class': ''}}) }}
-                                            {{ form_errors(form.description) }}
-                                            {{ form_widget(form.description, {'attr': {'class': ''}})}}
-                                        </div>
-                                        <div class="input-field">
-                                            {{ form_label(form.commentaire, "Un commentaire ?", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
-                                            {{ form_errors(form.commentaire) }}
-                                            {{ form_widget(form.commentaire, {'attr': {'class': ''}})}}
-                                        </div></div>
+                                       <div class="input-field  col s6">
+                                       {{ form_widget(form.commun, {'attr': {'class': 'css_checkbox', 'onchange' : 'commun()'}})}}
+
+                                           {{ form_label(form.commun, "", {'label_attr': {'class': 'col-sm-6 control-label'}}) }}
+                                           {{ form_errors(form.commun) }}
+                                       </div>
+                                       <div class="input-field  col s6">
+                                       {{ form_widget(form.communfamille, {'attr': {'class': 'css_checkbox', 'onchange' : 'communfamille()'}})}}
+
+                                           {{ form_label(form.communfamille, "",{'label_attr': {'class': 'col-sm-6'}}) }}
+                                           {{ form_errors(form.communfamille) }}
+                                       </div>
+                                       </div>
 
                                         <div class="row" style="margin-top:70px">
                                         <div class="col s4">
@@ -74,4 +98,24 @@
             </div>
             <!-- /.row -->
         </div>
+        <script>
+        function communfamille(){
+
+        if (document.getElementById('ObjetListe_communfamille').checked == true){
+        document.getElementById('ObjetListe_commun').disabled = true;
+        }
+        else{
+        document.getElementById('ObjetListe_commun').disabled = false;
+        }}
+        function commun(){
+
+        if (document.getElementById('ObjetListe_commun').checked == true){
+        document.getElementById('ObjetListe_communfamille').disabled = true;
+        }
+        else {
+        document.getElementById('ObjetListe_communfamille').disabled = false;
+
+        }
+        }
+        </script>
         {% endblock %}

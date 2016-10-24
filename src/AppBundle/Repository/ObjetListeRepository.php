@@ -36,6 +36,8 @@ class ObjetListeRepository extends EntityRepository
     $qb = $this->createQueryBuilder('a');
     $qb
     ->where('a.User = :id')
+		->andwhere('a.commun = false')
+		->andwhere('a.communfamille = false')
     ->setParameter('id', $user)
   ;
 
@@ -60,4 +62,42 @@ class ObjetListeRepository extends EntityRepository
     ->getResult()
   ;
   }
+
+	public function FindCommun($famille)
+	{
+		// Méthode 1 : en passant par l'EntityManager
+
+		$qb = $this->createQueryBuilder('a');
+		$qb
+		->where('a.famille = :id')
+		->andwhere('a.commun = true')
+		->andwhere('a.communfamille = false')
+		->setParameter('id', $famille)
+	;
+
+	return $qb
+		->getQuery()
+		->getResult()
+	;
+	}
+
+	public function FindCommunFamille($famille)
+	{
+		// Méthode 1 : en passant par l'EntityManager
+
+		$qb = $this->createQueryBuilder('a');
+		$qb
+		->where('a.famille = :id')
+		->andwhere('a.commun = false')
+		->andwhere('a.communfamille = true')
+		->setParameter('id', $famille)
+	;
+
+	return $qb
+		->getQuery()
+		->getResult()
+	;
+	}
+
+
 }

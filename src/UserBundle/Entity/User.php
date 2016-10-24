@@ -9,7 +9,7 @@ use UserBundle\Entity\Famille;
 
 
 /**
- * @ORM\Entity
+* @ORM\Entity(repositoryClass="UserBundle\Repository\UserRepository")
  */
 class User extends BaseUser
 {

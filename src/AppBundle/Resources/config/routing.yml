@@ -19,6 +19,17 @@ gnet_platform_autreListe:
 gnet_platform_allListe:
     path:     /allListe
     defaults: { _controller: AppBundle:maliste:allListe}
+gnet_platform_listefamille:
+    path:     /listefamille/{id}
+    defaults: { _controller: AppBundle:maliste:listeFamille}
+    requirements:
+            id: \d*
+
+gnet_platform_listecouple:
+    path:     /allListe/{id}
+    defaults: { _controller: AppBundle:maliste:listeCouple}
+    requirements:
+            id: \d*
 
 
 gnet_platform_editComment:

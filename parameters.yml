@@ -1,0 +1,14 @@
+parameters:
+    database_host: localhost
+    database_port: 3306
+    database_name: cyprieng_familyt
+    database_user: cyprieng_cyprien
+    database_password: 'parker93'
+    mailer_transport: smtp
+    mailer_host: mail.cypriengilbert.com
+    mailer_user: null
+    mailer_password: null
+    secret: ceciestuneapplicationfiatparcyprpourquen
+    mailer_user:     cyprien@cypriengilbert.com
+    mailer_password: 'parker93'
+    mailer_port: 25

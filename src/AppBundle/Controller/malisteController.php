@@ -8,6 +8,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\ObjetListe;
+use UserBundle\Entity\Famille;
 use AppBundle\Entity\Commentaire;
 use UserBundle\Entity\User;
 use Symfony\Component\Form\Forms;
@@ -52,13 +53,10 @@ return $this->render('AppBundle:Default:maliste.html.twig', array(
 
     public function autreListeAction($id)
     {
-          $repository = $this
-          ->getDoctrine()
-          ->getManager()
-          ->getRepository('UserBundle:User');
-
-        $User = $repository->findOneBy(array('id' => $id));
-
+          $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
+          $User = $repository->findOneBy(array('id' => $id));
+          $idfamille = $User->getFamille();
+          $famille = $repository->FindFamille($idfamille);
 
         $repository = $this
           ->getDoctrine()
@@ -66,17 +64,63 @@ return $this->render('AppBundle:Default:maliste.html.twig', array(
           ->getRepository('AppBundle:ObjetListe')
 ;
 
-
-
 $listListe = $repository->FindAllOther($User);
 
 
 return $this->render('AppBundle:Default:autreListe.html.twig', array(
       'Liste' => $listListe,
-      'User' => $User
+      'User' => $User,
+      'famille' => $famille
     ));
     }
 
+
+    public function listeFamilleAction($id)
+    {
+          $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
+          $User = $repository->findOneBy(array('id' => $id));
+          $idfamille = $User->getFamille();
+          $famille = $repository->FindFamille($idfamille);
+
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('AppBundle:ObjetListe')
+  ;
+
+  $listListe = $repository->FindCommunFamille($idfamille);
+
+
+  return $this->render('AppBundle:Default:autreListe.html.twig', array(
+      'Liste' => $listListe,
+      'User' => $User,
+      'famille' => $famille
+    ));
+    }
+
+
+    public function listeCoupleAction($id)
+    {
+          $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
+          $User = $repository->findOneBy(array('id' => $id));
+          $idfamille = $User->getFamille();
+          $famille = $repository->FindFamille($idfamille);
+
+        $repository = $this
+          ->getDoctrine()
+          ->getManager()
+          ->getRepository('AppBundle:ObjetListe')
+  ;
+
+  $listListe = $repository->FindCommun($idfamille);
+
+
+  return $this->render('AppBundle:Default:autreListe.html.twig', array(
+      'Liste' => $listListe,
+      'User' => $User,
+      'famille' => $famille
+    ));
+    }
 
     public function allListeAction()
     {
@@ -182,6 +226,8 @@ public function changeCommentAction(Request $request, $id)
     $id_user = $this->container->get('security.context')->getToken()->getUser();
     $datetime = date("Y");
     $objetliste->setPris('0');
+    $idfamille = $id_user->getFamille();
+$objetliste->setFamille($idfamille);
     $objetliste->setUser($id_user);
     $objetliste->setannee($datetime);
     $form = $this->get('form.factory')->create('AppBundle\Form\ObjetListeType', $objetliste);

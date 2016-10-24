@@ -22,6 +22,7 @@
                                         <tr>
                                             <th>Object</th>
                                             <th>Commentaire</th>
+                                            <th>URL</th>
                                             <th>Action</th>
                                         </tr>
                                     </thead>
@@ -33,6 +34,8 @@
                                         <td>{{ Ligne.description }}</td>
 
                                          <td>{{ Ligne.Commentaire }}</td>
+                                         <td>{% if Ligne.url %}<a target="_blank" href="{{ Ligne.url }}">exemple</a>{% endif %}</td>
+
                                          <td>
                                         <a href="{{ path('gnet_platform_DeleteListe', {'id': Ligne.id }) }}"><img src="../../../web/img/croix_rouge.png" alt="Supprimer"  height="20">
                                         <a href="{{ path('gnet_platform_editListe', {'id': Ligne.id }) }}"><img src="../../../web/img/addcomment.png" alt="Modifier Liste" height="20"></a>
