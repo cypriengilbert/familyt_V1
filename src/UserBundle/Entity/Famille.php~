@@ -5,6 +5,8 @@ namespace UserBundle\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
+ * Famille
+ *
  * @ORM\Table(name="famille")
  * @ORM\Entity(repositoryClass="UserBundle\Repository\FamilleRepository")
  */
@@ -54,9 +56,13 @@ class Famille
     private $coef_2;
 
     /**
-   * @ORM\ManyToMany(targetEntity="AppBundle\Entity\Depense", cascade={"persist"})
-   */
-  private $depense;
+     * @var integer
+     *
+     * @ORM\Column(name="pater", type="integer")
+     */
+    private $pater;
+
+
 
 
     /**
@@ -212,4 +218,6 @@ class Famille
     {
         return $this->coef_2;
     }
+
+
 }

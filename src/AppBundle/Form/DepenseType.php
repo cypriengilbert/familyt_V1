@@ -27,6 +27,8 @@ class DepenseType extends AbstractType
                                   'expanded' => true,
                                    'required' => true))
             ->add('description')
+            ->add('idsouhait')
+
             ->add('concerne', 'entity', array(
                 'class' => 'UserBundle:Famille',
                 'property' => 'nom',

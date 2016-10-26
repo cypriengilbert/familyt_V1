@@ -10,17 +10,37 @@
 
 
 {% else %}
+<script>
+var x = 0;
+</script>
+<style>
+.hidden{
+display:none;
+}
+</style>
+
+<div class="row">
+  <div class="col s12">
+    <ul class="tabs">
+      {% for famille in listefamille %}
+      <li class="tab col s3"><a {% if User.id == famille.pater %}class="active"{% endif %} target="_self" href="{{ path('gnet_platform_autreListe', {'id':famille.pater})}}">{{ famille.nom }}</a></li>
+        {% endfor %}
+    </ul>
+  </div>
+
+</div>
 
 <div id="page-wrapper">
             <div class="row">
                 <div class="col-lg-12">
-                    <h2 class="page-header">Liste de {{ User.username }} </h2>
+                    <h2 class="page-header">Liste {% if page == 'unique' %}de {{ User.username }}{% elseif  page == 'couple' %}commune couple {{ f.nom }}{% elseif page == 'famille' %}de la famille {{ f.nom }}{% endif %}</h2>
                 </div>
+
                 <!-- /.col-lg-12 -->
             </div>
             <!-- /.row -->
             <div class="row">
-            {% if famille|length >2 %}
+            {% if famille1|length >2 %}
             <a href="{{ path('gnet_platform_listefamille', {'id':User.id })}}">
             <span class="chip ">
               <img src="{{ asset('/img/family.png')}}" alt="Contact Person">
@@ -28,7 +48,7 @@
             </span>
             </a>
               {% endif %}
-            {% if famille|length >1 %}
+            {% if famille1|length >1 %}
 
             <a href="{{ path('gnet_platform_listecouple', {'id':User.id})}}">
             <span class="chip ">
@@ -39,15 +59,14 @@
 </div>
             <div class="row">
 
-            {% for famille in famille %}
-              {% if famille.id != User.id %}
+            {% for famille in famille1 %}
+
               <a href="{{ path('gnet_platform_autreListe', {'id':famille.id})}}">
               <span class="chip ">
                 <img src="{{ asset('/img/user/' ~ famille.username ~ '.jpg')}}" alt="Contact Person">
                 {{ famille.username}}
               </span>
             </a>
-            {% endif %}
 
             {% endfor %}
             </div>
@@ -76,10 +95,10 @@
                                           <tr class="odd gradeX">
                                           <td>
                                           {% if Ligne.Pris == 1 %}
+                                          <i class="fa fa-circle tooltipped" data-position="top" data-delay="20" data-tooltip="Indisponible" aria-hidden="true" style="color:red; font-size:30px; margin-left:5px;"></i>
 
-                                          <img src="{{ asset('img/rouge.png') }}" alt="Déjà pris" height="20" class="tooltipped" data-position="top" data-delay="20" data-tooltip="Indisponible">
                                           {% else %}
-                                          <img src="{{ asset('img/vert.jpeg') }}" alt="Dispo"  height="20" class="tooltipped" data-position="top" data-delay="20" data-tooltip="Disponible">
+                                          <i class="fa fa-circle tooltipped" data-position="top" data-delay="20" data-tooltip="Disponible" aria-hidden="true" style="color:green; font-size:30px; margin-left:5px;"></i>
                                           {% endif %}
                                           </td>
                                         <td>{{ Ligne.description }}</td>
@@ -87,10 +106,11 @@
                                          <td>{{ Ligne.commentaire }}</td>
                                          <td>{% if Ligne.url %}<a target="_blank" href="{{ Ligne.url }}">exemple</a>{% endif %}</td>
 
-                                         <td><a href="{{ path('gnet_platform_editComment', {'id': Ligne.id }) }}"><i style="font-size:20px" class="fa fa-pencil-square-o tooltipped" data-position="bottom" data-delay="50" data-tooltip="Modifier" aria-hidden="true"></i></a>
-                                         <a href="{{ path('gnet_platform_rendreIndispo', {'id': Ligne.id }) }}"><i style="font-size:20px" class="fa fa-times-circle-o tooltipped" data-position="bottom" data-delay="50" data-tooltip="Je rends dispo" aria-hidden="true"></i></a>
-                                         <a href="{{ path('gnet_platform_rendredispo', {'id': Ligne.id }) }}"><i style="font-size:20px" class="fa fa-check-circle-o tooltipped" data-position="bottom" data-delay="50" data-tooltip="Je prends" aria-hidden="true"></i></a>
-                                         </td>
+                                         <td><a href="{{ path('gnet_platform_editComment', {'id': Ligne.id }) }}"><i style="font-size:20px" class="fa fa-pencil-square-o tooltipped" data-position="bottom" data-delay="50" data-tooltip="Ajouter un commentaire" aria-hidden="true"></i></a>
+                                          {% if Ligne.Pris != 1 %}<a><i style="font-size:20px" class="fa fa-check-circle-o tooltipped" data-position="bottom" data-delay="50" onclick="var x = {{Ligne.id}};changehref(x);$('#modal1').openModal();" data-tooltip="Je prends" aria-hidden="true"></i></a>{% endif %}
+{% if Ligne.Pris == 1 %}
+ <a href="{{ path('gnet_platform_rendredispo', {'id': Ligne.id }) }}"><i style="font-size:20px" class="fa fa-times-circle-o tooltipped" data-position="bottom" data-delay="50" data-tooltip="Je rends dispo" aria-hidden="true"></i></a>
+                                         {% endif %}</td>
 
                                           {%  endfor %}
                                         </tr>
@@ -116,11 +136,145 @@
         </div>
         <!-- /#page-wrapper -->
         {% endif %}
+
+
+        <!-- Modal Structure -->
+        <div id="modal1" class="modal">
+          <div class="modal-content">
+<div class="col s12">
+Voulez-vous ajouter une dépenses pour ce cadeau ?
+</div>
+          <div class="col s12">
+            {{ form_start(form, {'attr': {'class': 'form-vertical'}}) }}
+
+             {{ form_errors(form) }}
+
+
+             <div class="row">
+
+                  <div class="input-field col s12">
+                      {{ form_label(form.description, "Quel est l'objet de la dépense ?", {'label_attr': {'class': ''}}) }}
+                      {{ form_errors(form.description) }}<br>
+                      {{ form_widget(form.description, {'attr': {'class': ''}})}}
+                  </div></div>
+                  <div class="row">
+                   <div class="input-field col s6">
+                      {{ form_label(form.concerne, "Pour qui est le cadeau ? (laisser vide si ce n'est pas un cadeau)", {'label_attr': {'class': ''}}) }}
+                      <br>{{ form_errors(form.concerne) }}<br>
+                      {{ form_widget(form.concerne, {'attr': {'class': '', 'onchange' : 'block()' }})}}
+                  </div>
+                  <div class="input-field col s6">
+                      {{ form_label(form.type, "Quel type ? (Important pour les comptes!!!)", {'label_attr': {'class': ''}}) }}
+                      <br>{{ form_errors(form.type) }}<br>
+                      {{ form_widget(form.type, {'attr': {'class': '', 'id':'dropdown_type', 'onchange': 'block()'}})}}
+                  </div>
+                  </div>
+                  <div class="row">
+
+                  <div class="input-field col s12">
+                      {{ form_label(form.montant, "Le montant ?", {'label_attr': {'class': ''}}) }}
+                      {{ form_errors(form.montant) }}<br>
+                      {{ form_widget(form.montant, {'attr': {'class': ''}})}}
+                  </div>
+                  </div>
+                  <div class="row">
+
+                  <div class="input-field col s12">
+                      {{ form_label(form.pour, "A qui imputé cette dépense ?", {'label_attr': {'class': ''}}) }}
+                      <br>{{ form_errors(form.pour) }}<br>
+                      {{ form_widget(form.pour, {'attr': {'class': 'css_checkbox'}})}}
+                  </div>
+
+                  <div class="input-field col s12">
+                      {{ form_label(form.idsouhait, "A qui imputé cette dépense ?", {'label_attr': {'class': 'hidden'}}) }}
+                      <br>{{ form_errors(form.idsouhait) }}<br>
+                      {{ form_widget(form.idsouhait, {'attr': {'class': 'hidden'}})}}
+                  </div>
+                  </div>
+
+
+                  <button style="margin-top:10px" class="btn waves-effect waves-light" type="submit" name="action">Valider
+                  <i class="material-icons right">send</i>
+                  </button>
+
+                  <a id="mylink" href="" style="margin-top:10px; background-color:#EE6E73" class="btn waves-effect waves-light" onclick="  $('#modal1').closeModal();
+">Ne pas ajouter de dépense
+                  <i class="material-icons right">not_interested</i>
+                  </a> {{ form_end(form) }}
+
+          </div>
+          </div>
+
+
+        </div>
+<script>
+function changehref(x){
+var link = document.getElementById("mylink");
+var newurl = "{{ path('gnet_platform_rendreIndispo', {'id': '1' }) }}";
+newurl = newurl.replace("1", x);
+document.getElementById("depense_idsouhait").value = x;
+link.setAttribute('href', newurl);
+}
+
+</script>
 <script>
 $(document).ready(function(){
   $('.tooltipped').tooltip({delay: 50});
 });
+</script>
+<script>
+$(document).ready(function(){
+   $('.modal1').leanModal();
+ });
+</script>
+<script>
+document.getElementById("depense_concerne").value = {{ f.id }};
+</script>
+<script>
+function block(){
+change = document.getElementById("depense_type").value;
+if (change == 'moitie'){
+for (i=2; i < 10; i++){
+document.getElementById("depense_pour_"+i).checked = false;
+document.getElementById("depense_pour_"+i).disabled = false;
+}
+document.getElementById("depense_pour_{{ famille.id }}").checked = true;
+document.getElementById("depense_pour_{{ famille.id }}").disabled = true;
+}
+else if(change == 'F&S'){
+for (i=2; i < 10; i++){
 
+document.getElementById("depense_pour_"+i).checked = true;
+document.getElementById("depense_pour_"+i).disabled = true;
+
+}
+}
+else if(change == 'O&T'){
+cadeau = document.getElementById("depense_concerne").value;
+for (i=2; i < 10; i++){
+if (cadeau != i ){
+document.getElementById("depense_pour_"+i).checked = true;
+document.getElementById("depense_pour_"+i).disabled = true;
+}
+else{
+document.getElementById("depense_pour_"+i).checked = false;
+document.getElementById("depense_pour_"+i).disabled = false;
+}
+}
+}
+else{
+for (i=2; i < 10; i++){
+document.getElementById("depense_pour_"+i).checked = false;
+document.getElementById("depense_pour_"+i).disabled = false;
+document.getElementById("depense_pour_{{ famille.id }}").disabled = true;
+
+}
+
+
+
+}
+
+}
 </script>
 
 

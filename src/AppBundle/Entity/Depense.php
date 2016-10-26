@@ -31,6 +31,14 @@ class Depense
      */
   private $pour;
 
+
+      /**
+       * @var int
+       *
+       * @ORM\Column(name="idsouhait", type="integer")
+       */
+      private $idsouhait;
+
    /**
    * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Famille")
    * @ORM\JoinColumn(nullable=false)
@@ -275,5 +283,29 @@ class Depense
     public function getPour()
     {
         return $this->pour;
+    }
+
+    /**
+     * Set idsouhait
+     *
+     * @param integer $idsouhait
+     *
+     * @return Depense
+     */
+    public function setIdsouhait($idsouhait)
+    {
+        $this->idsouhait = $idsouhait;
+
+        return $this;
+    }
+
+    /**
+     * Get idsouhait
+     *
+     * @return integer
+     */
+    public function getIdsouhait()
+    {
+        return $this->idsouhait;
     }
 }

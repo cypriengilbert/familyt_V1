@@ -10,6 +10,8 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use AppBundle\Entity\ObjetListe;
 use UserBundle\Entity\Famille;
 use AppBundle\Entity\Commentaire;
+use AppBundle\Entity\Depense;
+
 use UserBundle\Entity\User;
 use Symfony\Component\Form\Forms;
 use AppBundle\Entity\Task;
@@ -51,12 +53,15 @@ return $this->render('AppBundle:Default:maliste.html.twig', array(
     ));
     }
 
-    public function autreListeAction($id)
+    public function autreListeAction(Request $request, $id)
     {
           $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
           $User = $repository->findOneBy(array('id' => $id));
-          $idfamille = $User->getFamille();
-          $famille = $repository->FindFamille($idfamille);
+
+          $idfamille = $User->getFamille()->first();
+          $famille1 = $repository->FindFamille($idfamille);
+          $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:Famille');
+          $listefamille = $repository->findAll();
 
         $repository = $this
           ->getDoctrine()
@@ -66,11 +71,31 @@ return $this->render('AppBundle:Default:maliste.html.twig', array(
 
 $listListe = $repository->FindAllOther($User);
 
+$depense = new Depense();
+$datetime = new \Datetime('now');
+$famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
+$depense->setPar($famille);
+$depense->setdate($datetime);
+$form = $this->get('form.factory')->create('AppBundle\Form\DepenseType', $depense);
+$form->handleRequest($request);
+if ($form->isSubmitted() && $form->isValid()) {
+    $em = $this->getDoctrine()->getManager();
+    $em->persist($depense);
+    $em->flush();
+    $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+  return $this->redirect($this->generateUrl('gnet_platform_rendreIndispo', array('id' => $depense->getIdsouhait())));
+    }
+
 
 return $this->render('AppBundle:Default:autreListe.html.twig', array(
       'Liste' => $listListe,
       'User' => $User,
-      'famille' => $famille
+      'famille' => $famille,
+      'famille1' => $famille1,
+'listefamille' => $listefamille,
+      'page' => 'unique',
+      'f' => $idfamille,
+      'form' => $form->createView()
     ));
     }
 
@@ -79,8 +104,9 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
     {
           $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
           $User = $repository->findOneBy(array('id' => $id));
-          $idfamille = $User->getFamille();
+          $idfamille = $User->getFamille()->first();
           $famille = $repository->FindFamille($idfamille);
+
 
         $repository = $this
           ->getDoctrine()
@@ -94,7 +120,10 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
   return $this->render('AppBundle:Default:autreListe.html.twig', array(
       'Liste' => $listListe,
       'User' => $User,
-      'famille' => $famille
+      'famille' => $famille,
+      'f' => $idfamille,
+      'page' => 'famille',
+
     ));
     }
 
@@ -103,7 +132,7 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
     {
           $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
           $User = $repository->findOneBy(array('id' => $id));
-          $idfamille = $User->getFamille();
+          $idfamille = $User->getFamille()->first();
           $famille = $repository->FindFamille($idfamille);
 
         $repository = $this
@@ -118,7 +147,9 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
   return $this->render('AppBundle:Default:autreListe.html.twig', array(
       'Liste' => $listListe,
       'User' => $User,
-      'famille' => $famille
+      'famille' => $famille,
+      'f' => $idfamille,
+      'page' => 'couple',
     ));
     }
 
@@ -127,13 +158,13 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
           $repository = $this
           ->getDoctrine()
           ->getManager()
-          ->getRepository('UserBundle:User');
-        $User = $repository->findAll();
+          ->getRepository('UserBundle:Famille');
+        $famille = $repository->findAll();
 
 
 
   return $this->render('AppBundle:Default:allListe.html.twig', array(
-      'users' => $User
+      'famille' => $famille
     ));
     }
 
@@ -195,22 +226,13 @@ public function changeCommentAction(Request $request, $id)
      public function dispoAction(Request $request, $id)
     {
      $em = $this->getDoctrine()->getManager();
-
-    // On récupère l'annonce $id
     $Objet = $em->getRepository('AppBundle:ObjetListe')->find($id);
-
     if (null === $Objet) {
       throw new NotFoundHttpException("Le commentaire d'id ".$id." n'existe pas.");
     }
-
-
     $Objet->setPris('0');
-
-
       $em->flush();
-
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
-
       return $this->redirect($this->generateUrl('gnet_platform_autreListe', array('id' => $Objet->getUser()->getId())));
 
 
@@ -226,8 +248,8 @@ public function changeCommentAction(Request $request, $id)
     $id_user = $this->container->get('security.context')->getToken()->getUser();
     $datetime = date("Y");
     $objetliste->setPris('0');
-    $idfamille = $id_user->getFamille();
-$objetliste->setFamille($idfamille);
+    $idfamille = $id_user->getFamille()->first();
+    $objetliste->setFamille($idfamille);
     $objetliste->setUser($id_user);
     $objetliste->setannee($datetime);
     $form = $this->get('form.factory')->create('AppBundle\Form\ObjetListeType', $objetliste);

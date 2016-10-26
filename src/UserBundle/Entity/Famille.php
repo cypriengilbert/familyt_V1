@@ -55,6 +55,14 @@ class Famille
      */
     private $coef_2;
 
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="pater", type="integer")
+     */
+    private $pater;
+
+
 
 
     /**
@@ -209,5 +217,31 @@ class Famille
     public function getCoef2()
     {
         return $this->coef_2;
+    }
+
+
+
+    /**
+     * Set pater
+     *
+     * @param integer $pater
+     *
+     * @return Famille
+     */
+    public function setPater($pater)
+    {
+        $this->pater = $pater;
+
+        return $this;
+    }
+
+    /**
+     * Get pater
+     *
+     * @return integer
+     */
+    public function getPater()
+    {
+        return $this->pater;
     }
 }

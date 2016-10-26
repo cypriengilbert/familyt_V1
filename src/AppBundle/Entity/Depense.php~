@@ -24,9 +24,20 @@ class Depense
 
 
     /**
-     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Famille")
+     * @ORM\ManyToMany(targetEntity="UserBundle\Entity\Famille", cascade={"persist"})
+     * @ORM\JoinTable(name="depense_famille",
+     * joinColumns={@ORM\JoinColumn(name="depense_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="famille_id", referencedColumnName="id")})
      */
   private $pour;
+
+
+      /**
+       * @var int
+       *
+       * @ORM\Column(name="idsouhait", type="integer")
+       */
+      private $idsouhait;
 
    /**
    * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Famille")

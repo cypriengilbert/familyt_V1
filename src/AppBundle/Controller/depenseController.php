@@ -41,30 +41,15 @@ class depenseController extends Controller
     $form = $this->get('form.factory')->create('AppBundle\Form\DepenseType', $depense);
     $form->handleRequest($request);
     if ($form->isSubmitted() && $form->isValid()) {
-        // ... perform some action, such as saving the task to the database
-        // On récupère l'EntityManager
         $em = $this->getDoctrine()->getManager();
-
-
-
-
-    // Étape 1 : On « persiste » l'entité
-    $em->persist($depense);
-
-    // Étape 2 : On « flush » tout ce qui a été persisté avant
-    $em->flush();
-    $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
-      return $this->redirect($this->generateUrl('gnet_platform_mesdepenses'));
-
-    }
-
-
-
-
+        $em->persist($depense);
+        $em->flush();
+        $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+        return $this->redirect($this->generateUrl('gnet_platform_mesdepenses'));
+        }
     return $this->render('AppBundle:Default:addDepense.html.twig', array(
         'form' =>$form->createView(),
         'famille' => $famille,
-
         ));
     }
 

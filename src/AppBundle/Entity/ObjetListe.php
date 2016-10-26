@@ -28,6 +28,7 @@ class ObjetListe
      */
     private $annee;
 
+
     /**
      * @var string
      *
@@ -70,11 +71,12 @@ class ObjetListe
      */
     private $url;
 
-    /**
-    * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Famille")
-    * @ORM\JoinColumn(nullable=false)
-    */
-   private $famille;
+
+          /**
+           * @ORM\ManyToOne(targetEntity="UserBundle\Entity\Famille")
+           * @ORM\JoinColumn(nullable=true)
+           */
+          private $famille;
 
 
 
@@ -289,6 +291,8 @@ class ObjetListe
         return $this->url;
     }
 
+
+
     /**
      * Set famille
      *
@@ -296,7 +300,7 @@ class ObjetListe
      *
      * @return ObjetListe
      */
-    public function setFamille(\UserBundle\Entity\Famille $famille)
+    public function setFamille(\UserBundle\Entity\Famille $famille = null)
     {
         $this->famille = $famille;
 
@@ -312,4 +316,6 @@ class ObjetListe
     {
         return $this->famille;
     }
+
+
 }
