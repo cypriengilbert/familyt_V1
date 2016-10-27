@@ -37,8 +37,9 @@
                                          <td>{% if Ligne.url %}<a target="_blank" href="{{ Ligne.url }}">exemple</a>{% endif %}</td>
 
                                          <td>
-                                        <a href="{{ path('gnet_platform_DeleteListe', {'id': Ligne.id }) }}"><img src="../../../web/img/croix_rouge.png" alt="Supprimer"  height="20">
-                                        <a href="{{ path('gnet_platform_editListe', {'id': Ligne.id }) }}"><img src="../../../web/img/addcomment.png" alt="Modifier Liste" height="20"></a>
+                                        <a href="{{ path('gnet_platform_DeleteListe', {'id': Ligne.id }) }}"><i style="color:red; font-size:20px" class="fa fa-times-circle tooltipped" data-position="top" data-delay="20" data-tooltip="Modifier : attention ce cadeaux à peut-être déjà été pris" aria-hidden="true"  aria-hidden="true"></i></a>
+                                        <a href="{{ path('gnet_platform_editListe', {'id': Ligne.id }) }}"><i style="color:green; font-size:20px" class="fa fa-pencil-square-o tooltipped" data-position="top" data-delay="20" data-tooltip="Modifier : attention ce cadeaux à peut-être déjà été pris" aria-hidden="true"  aria-hidden="true"></i>
+</a>
                                         </td>
                                          {% endfor %}
 

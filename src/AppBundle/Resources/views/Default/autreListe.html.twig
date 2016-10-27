@@ -32,9 +32,7 @@ display:none;
 
 <div id="page-wrapper">
             <div class="row">
-                <div class="col-lg-12">
-                    <h2 class="page-header">Liste {% if page == 'unique' %}de {{ User.username }}{% elseif  page == 'couple' %}commune couple {{ f.nom }}{% elseif page == 'famille' %}de la famille {{ f.nom }}{% endif %}</h2>
-                </div>
+
 
                 <!-- /.col-lg-12 -->
             </div>
@@ -42,7 +40,7 @@ display:none;
             <div class="row">
             {% if famille1|length >2 %}
             <a href="{{ path('gnet_platform_listefamille', {'id':User.id })}}">
-            <span class="chip ">
+            <span class="chip " {% if  page == 'famille' %}style="background-color:#FF9800" {% endif %}>
               <img src="{{ asset('/img/family.png')}}" alt="Contact Person">
                   Liste Famille
             </span>
@@ -51,7 +49,7 @@ display:none;
             {% if famille1|length >1 %}
 
             <a href="{{ path('gnet_platform_listecouple', {'id':User.id})}}">
-            <span class="chip ">
+            <span class="chip " {% if  page == 'couple' %}style="background-color:#FF9800" {% endif %}>
               <img src="{{ asset('/img/kids-couple.png')}}" alt="Contact Person">
               Liste commune couple
             </span>
@@ -62,7 +60,7 @@ display:none;
             {% for famille in famille1 %}
 
               <a href="{{ path('gnet_platform_autreListe', {'id':famille.id})}}">
-              <span class="chip ">
+              <span class="chip " {% if  page == 'unique' %}{% if User.id == famille.id %}style="background-color:#FF9800"{% endif %}{% endif %}>
                 <img src="{{ asset('/img/user/' ~ famille.username ~ '.jpg')}}" alt="Contact Person">
                 {{ famille.username}}
               </span>

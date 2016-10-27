@@ -13,8 +13,9 @@ class AccueilController extends Controller
      */
     public function indexAction(Request $request)
     {
-        // replace this example code with whatever you need
-        return $this->render('AppBundle:Default:index.html.twig'
+        $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
+        $user = $repository->FindAll();
+        return $this->render('AppBundle:Default:index.html.twig', array('user' => $user)
         );
     }
 }

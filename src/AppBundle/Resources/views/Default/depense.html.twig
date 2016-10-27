@@ -8,7 +8,11 @@ $(document).ready(function() {
     });
 });
 </script>
+{% if (app.user.birthday|date('U') > '2000-01-01'|date('U')) %}
 
+<div id="page-wrapper"> <h1><br><br><br>Tu es bien trop jeune pour accéder à cette page ;)<h1></div>
+
+{% else %}
   <script type="text/javascript" src="{{ asset('bower_components/datatables/media/js/jquery.dataTables.min.js') }}"></script>
 <div id="page-wrapper">
             <div class="row">
@@ -151,8 +155,8 @@ $(document).ready(function() {
                                          <td>{{ Ligne.date|date("d/m/Y") }}</td>
                                          <td>
                                          {% if Ligne.par.id == famille  %}
-                                          <a href="{{ path('gnet_platform_deletedepenses', {'id': Ligne.id }) }}"><img src="../../../web/img/croix_rouge.png" alt="Supprimer"  height="20"></a>
-                                          <a href="{{ path('gnet_platform_editdepenses', {'id': Ligne.id }) }}"><img src="../../../web/img/addcomment.png" alt="Modifier Liste" height="20"></a>
+                                          <a href="{{ path('gnet_platform_deletedepenses', {'id': Ligne.id }) }}"><i class="fa fa-trash tooltipped" data-position="top" data-delay="20" data-tooltip="Supprimer" aria-hidden="true" style="color:red; font-size:30px; margin-left:5px;"></i></a>
+                                          <a href="{{ path('gnet_platform_editdepenses', {'id': Ligne.id }) }}"><i class="fa fa-pencil-square-o tooltipped" data-position="top" data-delay="20" data-tooltip="Modifier" aria-hidden="true" style="color:green; font-size:30px; margin-left:5px;"></i></a>
                                         {% else %}
                                         {% endif %}
                                          </td>
@@ -206,5 +210,6 @@ $(document).ready(function() {
             </div>
             <!-- /.row --></div>
 
+            {% endif %}
 
 {% endblock %}

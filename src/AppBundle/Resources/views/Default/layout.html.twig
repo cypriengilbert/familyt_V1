@@ -14,16 +14,24 @@
 </head>
 <body onload="myFunction()">
   <ul id="dropdown_noel" class="dropdown-content">
+{% if (app.user.birthday|date('U') < '2000-01-01'|date('U')) %}
+    <li><a href="{{ path('gnet_platform_allListe') }}">Les Listes</a></li>
+    {% endif %}
+
     <li><a href="{{ path('gnet_platform_view') }}">Ma Liste</a></li>
     <li><a href="{{ path('gnet_platform_addListe') }}">Ajouter un Voeux</a></li>
 
   </ul>
+  {% if (app.user.birthday|date('U') < '2000-01-01'|date('U')) %}
+
   <ul id="dropdown_compte" class="dropdown-content">
     <li><a href="{{ path('gnet_platform_addDepense') }}">Ajouter</a></li>
     <li><a href="{{ path('gnet_platform_mesdepenses') }}">Mes dépenses</a></li>
     <li class="divider"></li>
     <li><a href="{{ path('gnet_platform_depensetotale') }}">Dépenses totales</a></li>
   </ul>
+  {% endif %}
+
   <ul id="dropdown_compte" class="dropdown-content">
     <li><a href="{{ path('gnet_platform_editCompte') }}">Profil</a></li>
     <li><a href="{{ path('fos_user_change_password') }}">Mot de Passe</a></li>
@@ -39,16 +47,25 @@
 
   </ul>
   <ul id="dropdown_noel_mobile" class="dropdown-content">
+    {% if (app.user.birthday|date('U') < '2000-01-01'|date('U')) %}
+
+    <li><a href="{{ path('gnet_platform_allListe') }}">Les Listes</a></li>
+    {% endif %}
+
     <li><a href="{{ path('gnet_platform_view') }}">Ma Liste</a></li>
     <li><a href="{{ path('gnet_platform_addListe') }}">Ajouter un Voeux</a></li>
 
   </ul>
+  {% if (app.user.birthday|date('U') < '2000-01-01'|date('U')) %}
+
   <ul id="dropdown_compte_mobile" class="dropdown-content">
     <li><a href="{{ path('gnet_platform_addDepense') }}">Ajouter</a></li>
     <li><a href="{{ path('gnet_platform_mesdepenses') }}">Mes dépenses</a></li>
     <li class="divider"></li>
     <li><a href="{{ path('gnet_platform_depensetotale') }}">Dépenses totales</a></li>
   </ul>
+  {% endif %}
+
   <ul id="dropdown_compte_mobile" class="dropdown-content">
     <li><a href="{{ path('gnet_platform_editCompte') }}">Mon Profil</a></li>
     <li><a href="{{ path('fos_user_change_password') }}">Modifier mot de passe</a></li>
@@ -131,37 +148,11 @@
   </div>
 
   <footer class="page-footer orange">
-    <div class="container">
-      <div class="row">
-        <div class="col l6 s12">
-          <h5 class="white-text">Company Bio</h5>
-          <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
-
-
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Settings</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-        <div class="col l3 s12">
-          <h5 class="white-text">Connect</h5>
-          <ul>
-            <li><a class="white-text" href="#!">Link 1</a></li>
-            <li><a class="white-text" href="#!">Link 2</a></li>
-            <li><a class="white-text" href="#!">Link 3</a></li>
-            <li><a class="white-text" href="#!">Link 4</a></li>
-          </ul>
-        </div>
-      </div>
-    </div>
+    
     <div class="footer-copyright">
       <div class="container">
-      Made by <a class="orange-text text-lighten-3" href="http://materializecss.com">Materialize</a>
+      Made by <a class="orange-text text-lighten-3" href="http://cypriengilbert.com">Cyprien Gilbert With <i class="fa fa-heart" aria-hidden="true"></i>
+</a>
       </div>
     </div>
   </footer>
@@ -191,5 +182,11 @@
 function myFunction(){
   document.getElementById("dataTables-example_length").className = "col s6";
 }
+  </script>
+
+  <script>
+  $(document).ready(function(){
+     $('.carousel').carousel();
+   });
   </script>
 </html>

@@ -4,83 +4,62 @@
 
 {% block body %}
  <div id="page-wrapper">
-            <div class="row">
-                <div class="col s12">
-                    <h1 class="page-header">Dashboard</h1>
-                </div>
-                <!-- /.col s12 -->
-            </div>
-            <!-- /.row -->
-            <div class="row">
-  <a href="{{ path('gnet_platform_autrecompte') }}">
-<div class="col s12 m6">
-<div class="card">
-<div class="card-image">
-  <img src="images/sample-1.jpg">
-  <span class="card-title">Annuaire</span>
-</div>
-<div class="card-content">
-  <p>Trouvez les coordonnées de chacun rapidement</p>
-</div>
-<div class="card-action">
-  <a href="{{ path('gnet_platform_autrecompte') }}">Annuaire</a>
-</div>
-</div>
-</div>
-                 </a>
-                <a href="{{ path('gnet_platform_view') }}">
-              <div class="col s12 m6">
-              <div class="card">
-              <div class="card-image">
-                <img src="images/sample-1.jpg">
-                <span class="card-title">Annuaire</span>
-              </div>
-              <div class="card-content">
-                <p>Fini le Google Drive, de nouvelles listes de noël sont dispos: plus de doublons possibles !</p>
-              </div>
-              <div class="card-action">
-                <a href="{{ path('gnet_platform_view') }}">Liste de Noël</a>
-              </div>
-              </div>
-              </div>
-                </a>
-                <a href="{{ path('gnet_platform_mesdepenses') }}">
-                <div class="col s12 m6">
-                <div class="card">
-                <div class="card-image">
-                  <img src="images/sample-1.jpg">
-                  <span class="card-title">Annuaire</span>
-                </div>
-                <div class="card-content">
-                  <p>Une gestion simplifiée des comptes. Chacun rentre ce qu'il achète, et tout se calcule tout seul! Vous avez dit magique ?</p>
-                </div>
-                <div class="card-action">
-                  <a href="{{ path('gnet_platform_mesdepenses') }}">Voir mes dépenses</a>
-                </div>
-                </div>
-                </div>
-                 </a>
-                <a href="{{ path('calendar_index') }}">
-                <div class="col s12 m6">
-                <div class="card">
-                <div class="card-image">
-                  <img src="images/sample-1.jpg">
-                  <span class="card-title">Annuaire</span>
-                </div>
-                <div class="card-content">
-                  <p>Qui n'a jamais oublié un anniversaire ? Plus jamais avec le nouvel agenda :)</p>
-                </div>
-                <div class="card-action">
-                  <a href="{{ path('calendar_index') }}">Voir le calendrier</a>
-                </div>
-                </div>
-                </div>
-                 </a>
-            </div>
-
-
+    <div class="row" style="margin-bottom:20px">
+      <div class="col s12">
+        <div class="carousel tooltipped" data-position="right" data-delay="20" data-tooltip="Choisissez la liste" aria-hidden="true" >
+          {% for user in user %}
+          <a class="carousel-item" href="{{ path('gnet_platform_autreListe', {'id':user.id})}}"><img class="circle responsive-img" src="{{ asset('/img/user/' ~ user.username ~ '.jpg')}}"></a>
+          {% endfor %}
         </div>
-        <!-- /#page-wrapper -->
+      </div>
+      <div class="col s6 center">
+        <a style="margin-top:px" class="btn waves-effect waves-light" href="{{ path('gnet_platform_allListe') }}">Voir toutes les listes
+          <i class="material-icons right"></i>
+        </a>
+      </div>
+      <div class="col s6 center">
+        <a style="margin-top:px" class="btn waves-effect waves-light" href="{{ path('gnet_platform_view') }}">Voir ma liste
+          <i class="material-icons right"></i>
+        </a>
+      </div>
+    </div>
+    <div class="row" style="margin-top:90px">
+      <div class="col s4">
+          <div class="col s12 center" >
+            <i style="font-size:7em;" class="fa fa-money" aria-hidden="true"></i>
+          </div>
+          <div class="col s12 center">
+          {% if (app.user.birthday|date('U') < '2000-01-01'|date('U')) %}
+
+              <a style="margin-top:10px" class="btn waves-effect waves-light" href="{{ path('gnet_platform_mesdepenses') }}">Voir les comptes
+                <i class="material-icons right"></i>
+              </a>
+              {% endif %}
+
+          </div>
+      </div>
+      <div class="col s4 center">
+          <div class="col s12 center" >
+          <i style="font-size:7em;" class="material-icons">contacts</i>
+          </div>
+          <div class="col s12 center">
+              <a style="margin-top:10px" class="btn waves-effect waves-light" href="{{ path('gnet_platform_autrecompte') }}">Voir l'annuaire
+                <i class="material-icons right"></i>
+              </a>
+          </div>
+      </div>
+      <div class="col s4 center">
+          <div class="col s12 center">
+              <i style="font-size:7em;" class="fa fa-calendar" aria-hidden="true"></i>
+          </div>
+          <div class="col s12 center">
+              <a style="margin-top:10px" class="btn waves-effect waves-light" href="{{ path('calendar_index') }}">Voir le calendrier
+                <i class="material-icons right"></i>
+              </a>
+          </div>
+      </div>
+    </div>
+</div>
 
 
         {% endblock %}

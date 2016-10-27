@@ -7,6 +7,11 @@
 <div id="page-wrapper"> <h1><br><br><br>Tu es bien trop jeune pour accéder à cette page ;)<h1></div>
 
 {% else %}
+<style>
+.hidden{
+display:none;
+}
+</style>
 <div id="page-wrapper" >
 
             <div class="row">
@@ -64,6 +69,11 @@
                                             <br>{{ form_errors(form.pour) }}<br>
                                             {{ form_widget(form.pour, {'attr': {'class': 'css_checkbox'}})}}
                                         </div>
+                                        <div class="input-field col s12">
+                                            {{ form_label(form.idsouhait, "A qui imputé cette dépense ?", {'label_attr': {'class': 'hidden'}}) }}
+                                            <br>{{ form_errors(form.idsouhait) }}<br>
+                                            {{ form_widget(form.idsouhait, {'attr': {'class': 'hidden'}})}}
+                                        </div>
                                         </div>
 
 
@@ -106,13 +116,11 @@ document.getElementById("depense_pour_"+i).checked = false;
 document.getElementById("depense_pour_"+i).disabled = false;
 }
 document.getElementById("depense_pour_{{ famille.id }}").checked = true;
-document.getElementById("depense_pour_{{ famille.id }}").disabled = true;
 }
 else if(change == 'F&S'){
 for (i=2; i < 10; i++){
-
+document.getElementById("depense_pour_"+i).disabled = false;
 document.getElementById("depense_pour_"+i).checked = true;
-document.getElementById("depense_pour_"+i).disabled = true;
 
 }
 }
@@ -120,8 +128,8 @@ else if(change == 'O&T'){
 cadeau = document.getElementById("depense_concerne").value;
 for (i=2; i < 10; i++){
 if (cadeau != i ){
+document.getElementById("depense_pour_"+i).disabled = false;
 document.getElementById("depense_pour_"+i).checked = true;
-document.getElementById("depense_pour_"+i).disabled = true;
 }
 else{
 document.getElementById("depense_pour_"+i).checked = false;
@@ -129,7 +137,7 @@ document.getElementById("depense_pour_"+i).disabled = false;
 }
 }
 }
-else{
+else if(change == 'remboursement'){
 for (i=2; i < 10; i++){
 document.getElementById("depense_pour_"+i).checked = false;
 document.getElementById("depense_pour_"+i).disabled = false;

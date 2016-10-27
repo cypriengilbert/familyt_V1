@@ -82,7 +82,7 @@ public function depensetotaleAction()
       $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Depense');
       $debit = $repository->FindAll();
 
-        $resultat = array();
+      $resultat = array();
           foreach ($famille as $listefamille) {
             $resultat[$listefamille->getNom()] = 0;
           }
@@ -94,11 +94,7 @@ public function depensetotaleAction()
                 $temp = $resultat[$listefamille->getNom()];
                 $temp = $temp + $listedepense->getMontant();
                 $resultat[$listefamille->getNom()] = $temp;
-
-
-
               }
-
             }
           }
           foreach($famille as $listefamille){
@@ -137,7 +133,7 @@ public function depensetotaleAction()
                 }
                 if(count($listedepense->getPour()) == 8){
                 if ($listedepense->getType() == 'F&S') {
-                 $key = $listefamille->getId();
+                $key = $listefamille->getId();
                 $temp = $resultat[$listefamille->getNom()];
                 $temp = $temp - $listedepense->getMontant()*$listefamille->getCoef();
                 $resultat[$listefamille->getNom()] = $temp;
@@ -202,23 +198,20 @@ public function editDepenseAction(Request $request, $id)
 
     // On récupère l'annonce $id
     $depense = $em->getRepository('AppBundle:Depense')->find($id);
-
+    $famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
     if (null === $depense) {
       throw new NotFoundHttpException("Le commentaire d'id ".$id." n'existe pas.");
     }
 
-    $form = $this->createForm(new DepenseModifyContentType(), $depense);
-
-    if ($form->handleRequest($request)->isValid()) {
-      // Inutile de persister ici, Doctrine connait déjà notre annonce
+      $form = $this->createForm(new DepenseType(), $depense);
+      if ($form->handleRequest($request)->isValid()) {
       $em->flush();
-
       $request->getSession()->getFlashBag()->add('notice', 'Annonce bien modifiée.');
-
       return $this->redirect($this->generateUrl('gnet_platform_mesdepenses'));
     }
-    return $this->render('AppBundle:Default:editDepense.html.twig', array(
+    return $this->render('AppBundle:Default:addDepense.html.twig', array(
       'form'   => $form->createView(),
+      'famille' => $famille,
     ));
 
 }

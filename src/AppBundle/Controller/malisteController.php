@@ -100,13 +100,14 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
     }
 
 
-    public function listeFamilleAction($id)
+    public function listeFamilleAction(Request $request,$id)
     {
           $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
           $User = $repository->findOneBy(array('id' => $id));
           $idfamille = $User->getFamille()->first();
-          $famille = $repository->FindFamille($idfamille);
-
+          $famille1 = $repository->FindFamille($idfamille);
+          $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:Famille');
+          $listefamille = $repository->findAll();
 
         $repository = $this
           ->getDoctrine()
@@ -115,25 +116,43 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
   ;
 
   $listListe = $repository->FindCommunFamille($idfamille);
-
+  $depense = new Depense();
+  $datetime = new \Datetime('now');
+  $famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
+  $depense->setPar($famille);
+  $depense->setdate($datetime);
+  $form = $this->get('form.factory')->create('AppBundle\Form\DepenseType', $depense);
+  $form->handleRequest($request);
+  if ($form->isSubmitted() && $form->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($depense);
+      $em->flush();
+      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+    return $this->redirect($this->generateUrl('gnet_platform_rendreIndispo', array('id' => $depense->getIdsouhait())));
+      }
 
   return $this->render('AppBundle:Default:autreListe.html.twig', array(
       'Liste' => $listListe,
       'User' => $User,
       'famille' => $famille,
-      'f' => $idfamille,
+      'famille1' => $famille1,
+'listefamille' => $listefamille,
       'page' => 'famille',
+      'f' => $idfamille,
+      'form' => $form->createView()
 
     ));
     }
 
 
-    public function listeCoupleAction($id)
+    public function listeCoupleAction(Request $request, $id)
     {
           $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
           $User = $repository->findOneBy(array('id' => $id));
           $idfamille = $User->getFamille()->first();
-          $famille = $repository->FindFamille($idfamille);
+          $famille1 = $repository->FindFamille($idfamille);
+          $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:Famille');
+          $listefamille = $repository->findAll();
 
         $repository = $this
           ->getDoctrine()
@@ -142,14 +161,31 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
   ;
 
   $listListe = $repository->FindCommun($idfamille);
+  $depense = new Depense();
+  $datetime = new \Datetime('now');
+  $famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
+  $depense->setPar($famille);
+  $depense->setdate($datetime);
+  $form = $this->get('form.factory')->create('AppBundle\Form\DepenseType', $depense);
+  $form->handleRequest($request);
+  if ($form->isSubmitted() && $form->isValid()) {
+      $em = $this->getDoctrine()->getManager();
+      $em->persist($depense);
+      $em->flush();
+      $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
+    return $this->redirect($this->generateUrl('gnet_platform_rendreIndispo', array('id' => $depense->getIdsouhait())));
+      }
 
 
   return $this->render('AppBundle:Default:autreListe.html.twig', array(
       'Liste' => $listListe,
       'User' => $User,
       'famille' => $famille,
-      'f' => $idfamille,
+      'famille1' => $famille1,
+'listefamille' => $listefamille,
       'page' => 'couple',
+      'f' => $idfamille,
+      'form' => $form->createView()
     ));
     }
 
