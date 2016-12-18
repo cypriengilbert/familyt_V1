@@ -22,6 +22,13 @@ class Famille
     private $id;
 
     /**
+    * @var boolean
+    *
+    * @ORM\Column(name="participe", type="boolean")
+    */
+    private $participe;
+
+    /**
      * @var string
      *
      * @ORM\Column(name="nom", type="string", length=255)
@@ -61,6 +68,13 @@ class Famille
      * @ORM\Column(name="pater", type="integer")
      */
     private $pater;
+
+    /**
+     * @var integer
+     *
+     * @ORM\Column(name="madre", type="integer")
+     */
+    private $madre;
 
 
 
@@ -243,5 +257,53 @@ class Famille
     public function getPater()
     {
         return $this->pater;
+    }
+
+    /**
+     * Set madre
+     *
+     * @param integer $madre
+     *
+     * @return Famille
+     */
+    public function setMadre($madre)
+    {
+        $this->madre = $madre;
+
+        return $this;
+    }
+
+    /**
+     * Get madre
+     *
+     * @return integer
+     */
+    public function getMadre()
+    {
+        return $this->madre;
+    }
+
+    /**
+     * Set participe
+     *
+     * @param boolean $participe
+     *
+     * @return Famille
+     */
+    public function setParticipe($participe)
+    {
+        $this->participe = $participe;
+
+        return $this;
+    }
+
+    /**
+     * Get participe
+     *
+     * @return boolean
+     */
+    public function getParticipe()
+    {
+        return $this->participe;
     }
 }

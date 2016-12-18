@@ -117,14 +117,8 @@ document.getElementById("depense_pour_"+i).disabled = false;
 }
 document.getElementById("depense_pour_{{ famille.id }}").checked = true;
 }
-else if(change == 'F&S'){
-for (i=2; i < 10; i++){
-document.getElementById("depense_pour_"+i).disabled = false;
-document.getElementById("depense_pour_"+i).checked = true;
 
-}
-}
-else if(change == 'O&T'){
+else if(change == 'O&T' || change == 'F&S'){
 cadeau = document.getElementById("depense_concerne").value;
 for (i=2; i < 10; i++){
 if (cadeau != i ){

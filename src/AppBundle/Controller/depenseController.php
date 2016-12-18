@@ -32,9 +32,8 @@ class depenseController extends Controller
 {
     public function addDepenseAction(Request $request)
      {
-     // Création de l'entité
     $depense = new Depense();
-     $datetime = new \Datetime('now');
+    $datetime = new \Datetime('now');
     $famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
     $depense->setPar($famille);
     $depense->setdate($datetime);
@@ -53,16 +52,10 @@ class depenseController extends Controller
         ));
     }
 
-
-
-
-
 public function mesdepensesAction()
 {
-
       $famille = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first()->getId();
       $famille_ent = $this->container->get('security.context')->getToken()->getUser()->getFamille()->first();
-
       $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Depense');
       $debit = $repository->FindDebit($famille);
       return $this->render('AppBundle:Default:depense.html.twig', array(
@@ -74,14 +67,13 @@ public function mesdepensesAction()
 
 public function depensetotaleAction()
 {
-
-  $test = 0;
-
+      $test = 0;
+      $nb_partFS = 0;
+      $nb_partOT = 0;
       $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:Famille');
       $famille = $repository->FindAll();
       $repository = $this->getDoctrine()->getManager()->getRepository('AppBundle:Depense');
       $debit = $repository->FindAll();
-
       $resultat = array();
           foreach ($famille as $listefamille) {
             $resultat[$listefamille->getNom()] = 0;
@@ -120,26 +112,22 @@ public function depensetotaleAction()
 }
               }
 
-
-               if(count($listedepense->getPour()) == 7){
-                if ($listedepense->getType() == 'O&T') {
+                if ($listedepense->getType() == 'O&T' || $listedepense->getType() == 'F&S') {
+                  if ($listefamille->getParticipe() == TRUE){
+                  $nb_partOT = 0;
                   if($listedepense->getConcerne()->getId() != $listefamille->getId()){
+                  foreach($listedepense->getPour() as $participant){
+                    $nb_partOT = $nb_partOT + $participant->getCoef();
+                    }
                 $key = $listefamille->getId();
                 $temp = $resultat[$listefamille->getNom()];
-                $temp = $temp - $listedepense->getMontant()*$listefamille->getCoefOetT();
+              if($nb_partOT != 0){$temp = $temp - $listedepense->getMontant()*($listefamille->getCoef()/$nb_partOT);}
                 $resultat[$listefamille->getNom()] = $temp;
-}
               }
-                }
-                if(count($listedepense->getPour()) == 8){
-                if ($listedepense->getType() == 'F&S') {
-                $key = $listefamille->getId();
-                $temp = $resultat[$listefamille->getNom()];
-                $temp = $temp - $listedepense->getMontant()*$listefamille->getCoef();
-                $resultat[$listefamille->getNom()] = $temp;
-                }
+                }}
 
-                }
+
+
               }
             }
 
@@ -151,7 +139,7 @@ public function depensetotaleAction()
       'debit' => $debit,
       'famille' => $famille,
       'resultat' => $resultat,
-      'test' => $test
+      'test' => $nb_partOT
     ));
 
 }

@@ -1,215 +1,141 @@
 {% extends "AppBundle:Default:layout.html.twig" %}
 {% block body %}
-
 <script>
-$(document).ready(function() {
-    $('#dataTables-example').DataTable({
-            responsive: true
-    });
-});
+   $(document).ready(function() {
+       $('#dataTables-example').DataTable({
+               responsive: true
+       });
+   });
 </script>
 {% if (app.user.birthday|date('U') > '2000-01-01'|date('U')) %}
-
-<div id="page-wrapper"> <h1><br><br><br>Tu es bien trop jeune pour accéder à cette page ;)<h1></div>
-
-{% else %}
-  <script type="text/javascript" src="{{ asset('bower_components/datatables/media/js/jquery.dataTables.min.js') }}"></script>
 <div id="page-wrapper">
-            <div class="row">
-                <div class="col s12">
-                    <h1 class="page-header">Dépenses et crédit </h1>
-                </div>
-                <!-- /.col s12 -->
+   <h1>
+   <br><br><br>Tu es bien trop jeune pour accéder à cette page ;)
+   <h1>
+</div>
+{% else %}
+<script type="text/javascript" src="{{ asset('bower_components/datatables/media/js/jquery.dataTables.min.js') }}"></script>
+<div id="page-wrapper">
+   <div class="row">
+      <div class="col s12">
+         <h1 class="page-header">Dépenses et crédit </h1>
+      </div>
+      <!-- /.col s12 -->
+   </div>
+   <!-- /.row -->
+   <div class="row">
+      <div class="col s12">
+         <div class="panel panel-default">
+            <!-- /.panel-heading -->
+            <div class="panel-body">
+               <div class="dataTable_wrapper">
+                  <table class="responsive-table striped" id="dataTables-example">
+                     <thead>
+                        <tr>
+                           <th></th>
+                           <th>Effectué par</th>
+                           <th>Type</th>
+                           <th>Effectué pour</th>
+                           <th>Description</th>
+                           <th>Montant</th>
+                           <th>A charge</th>
+                           <th>A récuperer</th>
+                           <th>Date</th>
+                           <th>Action</th>
+                        </tr>
+                     </thead>
+                     <tbody>
+                        {% set resultat = 0 %}
+                        {% set arecup = 0 %}
+                        {% for Ligne in debit %}
+                        {% set nb_partOT = 0 %}
+                        {% set nb_partFS = 0 %}
+                        {% for participant in Ligne.pour %}
+                        {% set nb_partFS = nb_partFS + participant.coef %}
+                        {% endfor %}
+                        {% for participant in Ligne.pour %}
+                        {% set nb_partOT = nb_partOT + participant.coef %}
+                        {% endfor %}
+                        {% if Ligne.concerne %}{% if Ligne.concerne.id != famille  %}
+                        <tr class="odd gradeX">
+                           <td>{% if Ligne.par.id == famille  %}<i class="fa fa-plus" style="color:green" aria-hidden="true"></i>{% else %} <i class="fa fa-minus" style="color:red" aria-hidden="true"></i> {% endif %}</td>
+                           <td>{{ Ligne.par.nom }}</td>
+                           <td>{{ Ligne.type }}<br>{{Ligne.concerne.nom}}</td>
+                           <td>{% for pour in Ligne.pour %}{{ pour.nom }}<br>{% endfor %}</td>
+                           <td>{{ Ligne.description }}</td>
+                           <td>{{ Ligne.montant }}</td>
+                           <td>
+                              {% if (Ligne.type == 'remboursement')%}
+                              {% set montantpondere = Ligne.montant*0 %}{{ montantpondere }}
+                              {% elseif Ligne.type == 'moitie' %}
+                              {% set montantpondere = Ligne.montant*(1/(Ligne.pour|length)) %}{{ montantpondere|round(2, 'floor') }}
+                              {% elseif Ligne.type == 'F&S' %}
+                              {% set montantpondere = Ligne.montant*(famille_ent.coef/nb_partFS) %}{{ montantpondere|round(2, 'floor') }}
+                              {% elseif Ligne.type == 'O&T' %}
+                              {% set montantpondere = Ligne.montant*(famille_ent.coef/nb_partFS) %}{{ montantpondere|round(2, 'floor') }}
+                              {% endif %}
+                              {% set resultat = resultat + montantpondere %}
+                           </td>
+                           <td>
+                              {% if Ligne.par.id == famille %}
+                              {% set arecup =  arecup + Ligne.montant - montantpondere %}
+                              {{ Ligne.montant|round(2, 'floor') - montantpondere|round(2, 'floor') }}
+                              {% elseif Ligne.pour|length == 8 %}
+                              {% set arecup =  arecup + 0 - montantpondere %}
+                              {{ 0 - montantpondere|round(2, 'floor') }}
+                              {% else %}
+                              {% set arecup =  arecup + montantpondere - Ligne.montant %}
+                              {{ montantpondere|round(2, 'floor') - Ligne.montant|round(2, 'floor')}}
+                              {% endif %}
+                           </td>
+                           <td>{{ Ligne.date|date("d/m/Y") }}</td>
+                           <td>
+                              {% if Ligne.par.id == famille  %}
+                              <a href="{{ path('gnet_platform_deletedepenses', {'id': Ligne.id }) }}"><i class="fa fa-trash tooltipped" data-position="top" data-delay="20" data-tooltip="Supprimer" aria-hidden="true" style="color:red; font-size:30px; margin-left:5px;"></i></a>
+                              <a href="{{ path('gnet_platform_editdepenses', {'id': Ligne.id }) }}"><i class="fa fa-pencil-square-o tooltipped" data-position="top" data-delay="20" data-tooltip="Modifier" aria-hidden="true" style="color:green; font-size:30px; margin-left:5px;"></i></a>
+                              {% else %}
+                              {% endif %}
+                           </td>
+                        </tr>
+                        {%  endif %}
+                        {%  endif %}
+                        {%  endfor %}
+                     </tbody>
+                     <tfoot>
+                        <tr>
+                           <th></th>
+                           <th>Total</th>
+                           <th></th>
+                           <th> </th>
+                           <th></th>
+                           <th></th>
+                           <th>  {{ resultat|round(2, 'floor') }} </th>
+                           <th> {{ arecup|round(2, 'ceil') }}</th>
+                           <th></th>
+                           <th></th>
+                        </tr>
+                     </tfoot>
+                  </table>
+               </div>
             </div>
-            <!-- /.row -->
-            <div class="row">
-                <div class="col s12">
-                    <div class="panel panel-default">
-
-                        <!-- /.panel-heading -->
-                        <div class="panel-body">
-                            <div class="dataTable_wrapper">
-                                <table class="responsive-table striped" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th></th>
-
-                                            <th>Effectué par</th>
-                                            <th>Type</th>
-                                            <th>Effectué pour</th>
-                                            <th>Description</th>
-                                            <th>Montant</th>
-                                            <th>A charge</th>
-                                            <th>A récuperer</th>
-                                            <th>Date</th>
-                                            <th>Action</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                    {% set resultat = 0 %}
-                                    {% set arecup = 0 %}
-                                        {% for Ligne in debit %}
-
-
-                                          <tr class="odd gradeX">
-
-                                        <td>{% if Ligne.par.id == famille  %}<i class="fa fa-plus" style="color:green" aria-hidden="true"></i>{% else %} <i class="fa fa-minus" style="color:red" aria-hidden="true"></i> {% endif %}</td>
-
-
-                                         <td>{{ Ligne.par.nom }}</td>
-                                        <td>{{ Ligne.type }}</td>
-                                        <td>{% for pour in Ligne.pour %}{{ pour.nom }}<br>{% endfor %}</td>
-                                        <td>{% if Ligne.concerne %}{% if Ligne.concerne.id == famille  %}-----{% else %}{{ Ligne.description }}{% endif %}{% endif %}</td>
-                                         <td>{% if Ligne.concerne %}{% if Ligne.concerne.id == famille  %}-----{% else %}{{ Ligne.montant }}{% endif %}{% endif %}</td>
-
-                                         <td>
-                                          {% if Ligne.concerne %}
-                                          {% if Ligne.concerne.id != famille  %}
-
-                                          {% if (Ligne.type == 'remboursement')%}
-                                           {% set montantpondere = Ligne.montant*0 %}{{ montantpondere }}
-
-                                          {% elseif Ligne.type == 'moitie' %}
-                                           {% set montantpondere = Ligne.montant*(1/(Ligne.pour|length)) %}{{ montantpondere|round(2, 'floor') }}
-
-                                         {% elseif Ligne.type == 'F&S' %}
-                                            {% set montantpondere = Ligne.montant*famille_ent.coef %}{{ montantpondere|round(2, 'floor') }}
-                                         {% elseif Ligne.type == 'O&T' %}
-                                         {% set montantpondere = Ligne.montant*famille_ent.coefOetT %}{{ montantpondere|round(2, 'floor') }}
-                                         {% endif %}
-                                         {% set resultat = resultat + montantpondere %}
-
-
-                                         {% else %}
-                                         -----
-                                         {% endif %}
-                                          {% else %}
-                                          {% if (Ligne.type == 'remboursement')%}
-                                           {% set montantpondere = Ligne.montant*0 %}{{ montantpondere }}
-
-                                          {% elseif Ligne.type == 'moitie' %}
-                                           {% set montantpondere = Ligne.montant*(1/(Ligne.pour|length))  %}{{ montantpondere|round(2, 'floor') }}
-
-                                          {% elseif Ligne.type == 'F&S' %}
-                                            {% set montantpondere = Ligne.montant*famille_ent.coef %}{{ montantpondere|round(2, 'floor') }}
-                                          {% elseif Ligne.type == 'O&T' %}
-                                          {% set montantpondere = Ligne.montant*famille_ent.coefOetT %}{{ montantpondere|round(2, 'floor') }}
-                                          {% endif %}
-                                            {% set resultat = resultat + montantpondere %}
-
-                                         {% endif %}
-
-
-
-                                         </td>
-
-                                         <td>
-                                         {% if Ligne.concerne %}
-                                           {% if Ligne.concerne.id != famille  %}
-                                             {% if Ligne.par.id == famille %}
-                                                {% set arecup =  arecup + Ligne.montant - montantpondere %}
-
-                                                {{ Ligne.montant|round(2, 'floor') - montantpondere|round(2, 'floor') }}
-
-                                             {% elseif Ligne.pour|length == 8 %}
-
-
-                                                {% set arecup =  arecup + 0 - montantpondere %}
-
-                                                {{ 0 - montantpondere|round(2, 'floor') }}
-
-                                            {% else %}
-                                            {% set arecup =  arecup + montantpondere - Ligne.montant %}
-                                                {{ montantpondere|round(2, 'floor') - Ligne.montant|round(2, 'floor')}}
-
-                                            {% endif %}
-                                          {% else %}
-                                        -----
-                                        {% endif %}
-                                        {% else %}
-                                        {% if Ligne.par.id == famille %}
-                                           {% set arecup =  arecup + Ligne.montant - montantpondere %}
-
-                                           {{ Ligne.montant|round(2, 'floor') - montantpondere|round(2, 'floor') }}
-
-                                        {% elseif Ligne.pour|length == 8 %}
-
-
-                                           {% set arecup =  arecup + 0 - montantpondere %}
-
-                                           {{ 0 - montantpondere|round(2, 'floor') }}
-
-                                        {% else %}
-                                        {% set arecup =  arecup + montantpondere - Ligne.montant %}
-                                           {{ montantpondere|round(2, 'floor') - Ligne.montant|round(2, 'floor')}}
-
-                                        {% endif %}
-                                        {% endif %}
-
-
-                                         </td>
-
-
-
-
-                                         <td>{{ Ligne.date|date("d/m/Y") }}</td>
-                                         <td>
-                                         {% if Ligne.par.id == famille  %}
-                                          <a href="{{ path('gnet_platform_deletedepenses', {'id': Ligne.id }) }}"><i class="fa fa-trash tooltipped" data-position="top" data-delay="20" data-tooltip="Supprimer" aria-hidden="true" style="color:red; font-size:30px; margin-left:5px;"></i></a>
-                                          <a href="{{ path('gnet_platform_editdepenses', {'id': Ligne.id }) }}"><i class="fa fa-pencil-square-o tooltipped" data-position="top" data-delay="20" data-tooltip="Modifier" aria-hidden="true" style="color:green; font-size:30px; margin-left:5px;"></i></a>
-                                        {% else %}
-                                        {% endif %}
-                                         </td>
-                                         </tr>
-
-                                          {%  endfor %}
-
-                                          </tbody>
-
-
-
-
-
-                                         <tfoot>
-                                             <tr>
-                                                 <th></th>
-
-                                                 <th>Total</th>
-                                                 <th></th>
-                                                 <th> </th>
-                                                 <th></th>
-                                                 <th></th>
-                                                 <th>  {{ resultat|round(2, 'floor') }} </th>
-                                                 <th> {{ arecup|round(2, 'ceil') }}</th>
-                                                 <th></th>
-                                                 <th></th>
-                                             </tr>
-                                         </tfoot>
-                                </table>
-                                </div>
-                                </div>
-                                <div class="row" style="margin-top:70px">
-                                   <div class="col s4">
-                                   </div>
-                                   <div class="col s4">
-                                      <a href="{{ path('gnet_platform_addDepense') }}" class="btn waves-effect waves-light">Ajouter une dépense</a>
-                                   </div>
-                                   <div class="col s4">
-                                   </div>
-                                </div>
-
-                            </div>
-                            <!-- /.table-responsive -->
-
-                        </div>
-                        <!-- /.panel-body -->
-                    </div>
-                    <!-- /.panel -->
-                </div>
-                <!-- /.col s12 -->
+            <div class="row" style="margin-top:70px">
+               <div class="col s4">
+               </div>
+               <div class="col s4">
+                  <a href="{{ path('gnet_platform_addDepense') }}" class="btn waves-effect waves-light">Ajouter une dépense</a>
+               </div>
+               <div class="col s4">
+               </div>
             </div>
-            <!-- /.row --></div>
-
-            {% endif %}
-
+         </div>
+         <!-- /.table-responsive -->
+      </div>
+      <!-- /.panel-body -->
+   </div>
+   <!-- /.panel -->
+</div>
+<!-- /.col s12 -->
+</div>
+<!-- /.row --></div>
+{% endif %}
 {% endblock %}

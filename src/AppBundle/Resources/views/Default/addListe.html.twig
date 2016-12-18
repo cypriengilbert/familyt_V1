@@ -23,13 +23,23 @@
                                   {{ form_start(form, {'attr': {'class': 'form-horizontal'}}) }}
 
                                   {{ form_errors(form) }}
-
+<style>
+.dropdown{
+top:-0.8rem!important;
+}
+</style>
                                      <div class="row">
-                                       <div class="input-field col s12">
+                                       <div class="input-field col s6">
                                            {{ form_label(form.description, "Description", {'label_attr': {'class': 'col-sm-12 control-label'}}) }}
                                            {{ form_errors(form.description) }}
                                            {{ form_widget(form.description, {'attr': {'class': 'form-control'}})}}
                                        </div>
+                                       <div class="input-field col s6">
+                                           {{ form_label(form.User, "Pour qui est le voeux?", {'label_attr': {'class': 'col-sm-6 control-label dropdown'}}) }}
+                                           {{ form_errors(form.User) }}
+                                           {{ form_widget(form.User, {'attr': {'class': 'form-control'}})}}
+                                       </div>
+
                                        </div>
 
 
@@ -118,4 +128,12 @@
         }
         }
         </script>
+<script>
+document.getElementById('ObjetListe_User').value = '{{ app.user.id }}';
+{% if (app.user.birthday|date('U') > '2000-01-01'|date('U')) %}
+document.getElementById('ObjetListe_User').disabled = 'disabled';
+{% endif %}
+document.getElementById('ObjetListe_User').value = '{{ app.user.id }}';
+
+</script>
         {% endblock %}

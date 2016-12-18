@@ -1,5 +1,6 @@
 {% extends "AppBundle:Default:layout.html.twig" %}
 {% block body %}
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/morris.js/0.5.1/morris.css">
 
 {% if (app.user.birthday|date('U') > '2000-01-01'|date('U')) %}
 
@@ -7,7 +8,6 @@
 
 
 {% else %}
-
 
 <div id="page-wrapper" onload="myFunction2()">
             <div class="row">
@@ -24,35 +24,8 @@
                         <!-- /.panel-heading -->
                         <div class="panel-body">
                             <div class="dataTable_wrapper">
-                                <table class="responsive-table striped" id="dataTables-example">
-                                    <thead>
-                                        <tr>
-                                            <th>Nom</th>
-                                            <th>Montant</th>
+                            <canvas id="myChart" width="400" height="200"></canvas>
 
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-
-
-                                    {% set total = 0 %}
-                                    {% for key, value in resultat if key != 'Tout le monde' %}
-                                       <tr class="odd gradeX">
-                                        <td> {{ key }} </td>
-                                        <td>{{ value|round(2) }}</td>
-                                      {% set total = total + value %}
-                                         </tr>
-
-                                         {% endfor %}
-
-                                    </tbody>
-                                    <tfoot> <tr>
-                                         <th>Total</th>
-                                    <th>{{ total|round(2) }}</th>
-
-                                    </tfoot>
-
-                                </table>
                             </div>
                             <!-- /.table-responsive -->
 
@@ -72,5 +45,43 @@ $(document).ready(function() {
             responsive: true
     });
 });
+</script>
+
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.4.0/Chart.min.js"></script>
+
+
+
+
+<script>
+var data = {
+    labels: [{% for key, value in resultat if key != 'Tout le monde' %}"{{ key }}", {% endfor %}],
+    datasets: [
+        {
+            label: "Balances des débits et crédits",
+            backgroundColor: [
+                {% for key, value in resultat if key != 'Tout le monde' %}
+                {% if  value > 0 %}'rgba(75, 192, 192, 0.2)'{% else %}'rgba(255, 99, 132, 0.2)'{% endif %},
+            {% endfor %}
+            ],
+            borderColor: [
+            {% for key, value in resultat if key != 'Tout le monde' %}
+            {% if  value > 0 %}'rgba(75, 192, 192, 1)'{% else %}'rgba(255, 99, 132, 1)'{% endif %},
+        {% endfor %}
+            ],
+            borderWidth: 1,
+            data: [{% for key, value in resultat if key != 'Tout le monde' %}"{{ value|round(2) }}", {% endfor %}],
+        }
+    ]
+};
+var ctx = document.getElementById("myChart");
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: data,
+});
+
 </script>
 {% endblock %}

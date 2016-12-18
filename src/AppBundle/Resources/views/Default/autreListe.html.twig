@@ -1,15 +1,7 @@
 {% extends "AppBundle:Default:layout.html.twig" %}
 {% block body %}
-{% if app.user.username == User.username %}
-
-<div id="page-wrapper"> <h1><br><br><br>Petit malin... Tu attendra Noël comme tout le monde pour connaitre tes cadeaux... <br> Pour modifier ta liste, va dans "Ma Liste"<h1></div>
-
-{% elseif (app.user.birthday|date('U') > '2000-01-01'|date('U')) %}
-
-<div id="page-wrapper"> <h1><br><br><br>Tu es bien trop jeune pour accéder à cette page ;)<h1></div>
 
 
-{% else %}
 <script>
 var x = 0;
 </script>
@@ -29,6 +21,7 @@ display:none;
   </div>
 
 </div>
+
 
 <div id="page-wrapper">
             <div class="row">
@@ -69,6 +62,24 @@ display:none;
             {% endfor %}
             </div>
 
+{% if app.user.username == User.username %}
+
+<div id="page-wrapper"> <h1><br><br><br>Petit malin... Tu attendras Noël comme tout le monde pour connaître tes cadeaux... <br> Pour modifier ta liste, va dans "Ma Liste"<h1></div>
+
+{% elseif famille.id == f.id and page == 'couple' %}
+<div id="page-wrapper"> <h1><br><br><br>Petit malin... Tu attendras Noël comme tout le monde pour connaître tes cadeaux... <br> Pour modifier ta liste, va dans "Ma Liste"<h1></div>
+
+{% elseif famille.id == f.id and page == 'famille' %}
+<div id="page-wrapper"> <h1><br><br><br>Petit malin... Tu attendras Noël comme tout le monde pour connaître tes cadeaux... <br> Pour modifier ta liste, va dans "Ma Liste"<h1></div>
+
+{% elseif (app.user.birthday|date('U') > '2000-01-01'|date('U')) %}
+
+<div id="page-wrapper"> <h1><br><br><br>Tu es bien trop jeune pour accéder à cette page ;)<h1></div>
+
+
+{% else %}
+
+
             <div class="row">
                 <div class="col s12">
                     <div class="panel panel-default">
@@ -108,7 +119,22 @@ display:none;
                                           {% if Ligne.Pris != 1 %}<a><i style="font-size:20px" class="fa fa-check-circle-o tooltipped" data-position="bottom" data-delay="50" onclick="var x = {{Ligne.id}};changehref(x);$('#modal1').openModal();" data-tooltip="Je prends" aria-hidden="true"></i></a>{% endif %}
 {% if Ligne.Pris == 1 %}
  <a href="{{ path('gnet_platform_rendredispo', {'id': Ligne.id }) }}"><i style="font-size:20px" class="fa fa-times-circle-o tooltipped" data-position="bottom" data-delay="50" data-tooltip="Je rends dispo" aria-hidden="true"></i></a>
-                                         {% endif %}</td>
+                                         {% endif %}
+
+                                         {% if User.birthday|date('U') > '2000-01-01'|date('U') %}
+                                         {% if famille.id == f.id %}
+                                            {% if (famille.madre == app.user.id) or (famille.pater == app.user.id) %}
+                                            <a href="{{ path('gnet_platform_DeleteListe', {'id': Ligne.id }) }}"><i style="color:red; font-size:20px" class="fa fa-times-circle tooltipped" data-position="top" data-delay="20" data-tooltip="Modifier : attention ce cadeaux à peut-être déjà été pris" aria-hidden="true"  aria-hidden="true"></i></a>
+                                            <a href="{{ path('gnet_platform_editListe', {'id': Ligne.id }) }}"><i style="color:green; font-size:20px" class="fa fa-pencil-square-o tooltipped" data-position="top" data-delay="20" data-tooltip="Modifier : attention ce cadeaux à peut-être déjà été pris" aria-hidden="true"  aria-hidden="true"></i>
+                                          </a>                                                                                  {% endif %}
+
+     {% endif %}
+
+                                                                                  {% endif %}
+
+
+
+</td>
 
                                           {%  endfor %}
                                         </tr>
@@ -130,11 +156,10 @@ display:none;
 
             </div>
             <!-- /.row -->
-
         </div>
         <!-- /#page-wrapper -->
         {% endif %}
-
+</div>
 
         <!-- Modal Structure -->
         <div id="modal1" class="modal">
@@ -237,22 +262,14 @@ document.getElementById("depense_pour_"+i).checked = false;
 document.getElementById("depense_pour_"+i).disabled = false;
 }
 document.getElementById("depense_pour_{{ famille.id }}").checked = true;
-document.getElementById("depense_pour_{{ famille.id }}").disabled = true;
 }
-else if(change == 'F&S'){
-for (i=2; i < 10; i++){
 
-document.getElementById("depense_pour_"+i).checked = true;
-document.getElementById("depense_pour_"+i).disabled = true;
-
-}
-}
-else if(change == 'O&T'){
+else if(change == 'O&T' || change == 'F&S'){
 cadeau = document.getElementById("depense_concerne").value;
 for (i=2; i < 10; i++){
 if (cadeau != i ){
+document.getElementById("depense_pour_"+i).disabled = false;
 document.getElementById("depense_pour_"+i).checked = true;
-document.getElementById("depense_pour_"+i).disabled = true;
 }
 else{
 document.getElementById("depense_pour_"+i).checked = false;
@@ -260,7 +277,7 @@ document.getElementById("depense_pour_"+i).disabled = false;
 }
 }
 }
-else{
+else if(change == 'remboursement'){
 for (i=2; i < 10; i++){
 document.getElementById("depense_pour_"+i).checked = false;
 document.getElementById("depense_pour_"+i).disabled = false;

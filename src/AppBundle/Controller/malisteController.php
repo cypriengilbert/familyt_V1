@@ -57,9 +57,9 @@ return $this->render('AppBundle:Default:maliste.html.twig', array(
     {
           $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:User');
           $User = $repository->findOneBy(array('id' => $id));
-
           $idfamille = $User->getFamille()->first();
           $famille1 = $repository->FindFamille($idfamille);
+
           $repository = $this->getDoctrine()->getManager()->getRepository('UserBundle:Famille');
           $listefamille = $repository->findAll();
 
@@ -86,13 +86,12 @@ if ($form->isSubmitted() && $form->isValid()) {
   return $this->redirect($this->generateUrl('gnet_platform_rendreIndispo', array('id' => $depense->getIdsouhait())));
     }
 
-
 return $this->render('AppBundle:Default:autreListe.html.twig', array(
       'Liste' => $listListe,
       'User' => $User,
       'famille' => $famille,
       'famille1' => $famille1,
-'listefamille' => $listefamille,
+      'listefamille' => $listefamille,
       'page' => 'unique',
       'f' => $idfamille,
       'form' => $form->createView()
@@ -157,9 +156,7 @@ return $this->render('AppBundle:Default:autreListe.html.twig', array(
         $repository = $this
           ->getDoctrine()
           ->getManager()
-          ->getRepository('AppBundle:ObjetListe')
-  ;
-
+          ->getRepository('AppBundle:ObjetListe');
   $listListe = $repository->FindCommun($idfamille);
   $depense = new Depense();
   $datetime = new \Datetime('now');
@@ -286,25 +283,17 @@ public function changeCommentAction(Request $request, $id)
     $objetliste->setPris('0');
     $idfamille = $id_user->getFamille()->first();
     $objetliste->setFamille($idfamille);
-    $objetliste->setUser($id_user);
     $objetliste->setannee($datetime);
-    $form = $this->get('form.factory')->create('AppBundle\Form\ObjetListeType', $objetliste);
-
-
-
-
-
+    $form = $this->get('form.factory')->create('AppBundle\Form\ObjetListeType', $objetliste,array('idfamille' => $idfamille->getId()) );
     $form->handleRequest($request);
-
+if($objetliste->getUser() == null){
+$objetliste->setUser($id_user);
+}
     if ($form->isSubmitted() && $form->isValid()) {
-        // ... perform some action, such as saving the task to the database
-        // On récupère l'EntityManager
-        $em = $this->getDoctrine()->getManager();
 
-    // Étape 1 : On « persiste » l'entité
+    $em = $this->getDoctrine()->getManager();
+
     $em->persist($objetliste);
-
-    // Étape 2 : On « flush » tout ce qui a été persisté avant
     $em->flush();
     $request->getSession()->getFlashBag()->add('notice', 'Annonce bien enregistrée.');
       return $this->redirect($this->generateUrl('gnet_platform_view', array('id' => $objetliste->getId())));

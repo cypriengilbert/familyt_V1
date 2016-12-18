@@ -9,6 +9,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\DateType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 
 
 class ObjetListeType extends AbstractType
@@ -19,7 +20,26 @@ class ObjetListeType extends AbstractType
      */
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
+      $idfamille = $options['idfamille'];
+
         $builder
+        ->add('User', EntityType::class, array(
+                                 'class' => 'UserBundle:User',
+                                 'choice_label' => 'username',
+                                'multiple' => false,
+                                'expanded' => false,
+                                 'required' => true,
+                                 'query_builder' => function (\UserBundle\Repository\UserRepository $er) use($idfamille) {
+                                         return $er->createQueryBuilder('u')
+                                                    ->leftJoin('u.famille', 'b')
+                                              ->where('b.id = :id')
+                                              ->orderBy('u.birthday', 'ASC')
+                                              ->setParameter('id', $idfamille)
+
+
+;
+                                     }
+                             ))
         ->add('description')
         ->add('commentaire')
         ->add('url')
@@ -45,7 +65,8 @@ class ObjetListeType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults(array(
-            'data_class' => 'AppBundle\Entity\ObjetListe'
+            'data_class' => 'AppBundle\Entity\ObjetListe',
+            'idfamille' => null,
         ));
     }
 
